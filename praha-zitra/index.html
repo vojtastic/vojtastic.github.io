@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Future Development of Prague – 3D Scene</title>
+
+  <link rel="icon" href="https://app.iprpraha.cz/apl/app/model3d/favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="https://js.arcgis.com/4.28/esri/themes/light/main.css" />
+    
+  <style>
+    /* -------------------------------------------------------------------------- */
+    /* 1. FONTS & GLOBAL RESET                                                    */
+    /* -------------------------------------------------------------------------- */
+    @font-face {
+      font-family: 'unitproregular';
+      src: url("https://app.iprpraha.cz/apl/app/model3d/assets/UnitProRegular-DStEHsuU.otf") format("opentype"), 
+           url("https://app.iprpraha.cz/apl/app/model3d/assets/UnitProRegular-DBsle9t3.woff") format("woff");
+      font-weight: 400;
+    }
+    @font-face {
+      font-family: 'unitpromedium';
+      src: url("https://app.iprpraha.cz/apl/app/model3d/assets/UnitProMedium-BT3oid49.otf") format("opentype"), 
+           url("https://app.iprpraha.cz/apl/app/model3d/assets/UnitProMedium-Bh957Old.woff") format("woff");
+      font-weight: 400;
+    }
+
+    html, body {
+      padding: 0; margin: 0; height: 100%; width: 100%;
+      background-color: #e0e0e0;
+      font-family: "unitproregular", "Avenir Next", Helvetica, Arial, sans-serif;
+      overflow: hidden; 
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /* 2. LAYOUT CONTAINERS                                                       */
+    /* -------------------------------------------------------------------------- */
+    #viewDiv {
+      position: absolute; top: 0; bottom: 0; left: 0; right: 0;
+      z-index: 1; overflow: hidden; 
+    }
+
+    #sidePanel {
+      position: absolute; top: 0; bottom: 0; right: 0; width: 400px; 
+      background-color: white; z-index: 100; 
+      box-shadow: -2px 0 10px rgba(0,0,0,0.15);
+      transform: translateX(100%); 
+      transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+      display: flex; flex-direction: column;
+    }
+    #sidePanel.open { transform: translateX(0); }
+
+    /* -------------------------------------------------------------------------- */
+    /* 3. ESRI WIDGET OVERRIDES                                                   */
+    /* -------------------------------------------------------------------------- */
+    .esri-widget { font-family: "unitproregular", sans-serif !important; }
+    
+    .esri-ui .esri-component {
+      border-radius: 30px !important; 
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1) !important; 
+      border: none !important;
+      overflow: hidden !important; 
+    }
+    
+    .esri-attribution {
+        background-color: transparent !important; border: none !important;
+        box-shadow: none !important; color: rgba(0, 0, 0, 0.5) !important;
+        text-shadow: 0 0 2px rgba(255,255,255,0.8);
+    }
+    .esri-attribution a { color: rgba(0, 0, 0, 0.5) !important; }
+
+    /* -------------------------------------------------------------------------- */
+    /* 4. CUSTOM UI CONTROLS                                                      */
+    /* -------------------------------------------------------------------------- */
+    #pageHeader {
+      position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+      z-index: 90; background-color: white; padding: 10px 30px;
+      border-radius: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      font-family: "unitpromedium", sans-serif; font-size: 1.5rem;
+      color: #333; white-space: nowrap; display: flex; align-items: center;
+    }
+    #pageHeader img { height: 1.75rem; margin-right: 20px; }
+
+    #controls {
+      position: absolute; top: 20px; right: 20px;
+      display: flex; flex-direction: column; align-items: flex-end;
+      z-index: 95;
+    }
+
+    .toggle-group {
+      display: flex; background-color: white; padding: 4px;
+      border-radius: 30px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-bottom: 12px; width: auto; min-width: 280px; 
+    }
+    .toggle-btn {
+      flex: 1; border: none; background: transparent; padding: 10px 15px;
+      border-radius: 26px; font-family: "unitproregular", sans-serif;
+      font-size: 15px; color: #555; cursor: pointer; transition: all 0.2s;
+    }
+    .toggle-btn.active { background-color: #333; color: white; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+    .toggle-btn:not(.active):hover { background-color: #f0f0f0; color: #000; }
+
+    /* FULL SCREEN BUTTON */
+    #btnFullScreen {
+        position: absolute; bottom: 30px; right: 30px; z-index: 99;
+        background-color: white; border: none; width: 45px; height: 45px; 
+        border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        cursor: pointer; display: none; align-items: center; justify-content: center;
+        font-size: 20px; color: #333; transition: all 0.2s;
+    }
+    #btnFullScreen:hover { background-color: #333; color: white; transform: scale(1.1); }
+
+    /* -------------------------------------------------------------------------- */
+    /* 5. PROJECT LIST BUTTONS                                                    */
+    /* -------------------------------------------------------------------------- */
+    #projectControls {
+      position: absolute; bottom: 40px; left: 20px; z-index: 95;
+      background-color: rgba(255, 255, 255, 0.6); padding: 20px; 
+      border-radius: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+      backdrop-filter: blur(5px); display: flex; flex-direction: column; 
+      align-items: center; max-height: 50vh; overflow-y: auto;
+    }
+    .project-header-text { font-family: "unitpromedium", sans-serif; font-size: 1.5rem; color: #333; margin-bottom: 15px; }
+    .ui-button {
+      padding: 12px 25px; background-color: white; color: #333; border: 1px solid #eee; 
+      border-radius: 24px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      font-family: "unitproregular", sans-serif; font-size: 17px; cursor: pointer;
+      margin-bottom: 10px; width: 100%; min-width: 220px; display: flex;
+      align-items: center; justify-content: center; transition: all 0.2s;
+    }
+    .ui-button:hover { background-color: #f0f0f0; transform: scale(1.05); }
+    .btn-icon { height: 20px; margin-right: 12px; }
+
+    #lodIndicator {
+      display: none; position: absolute; bottom: 30px; left: 50%; 
+      transform: translateX(-50%); padding: 8px 16px; 
+      background: rgba(0,0,0,0.8); color: white; border-radius: 20px; 
+      font-family: "unitproregular", monospace; font-size: 12px;
+      pointer-events: none; z-index: 90; text-align: center;
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /* 6. SIDE PANEL & GALLERY                                                    */
+    /* -------------------------------------------------------------------------- */
+    #galleryContainer {
+        position: relative; width: 100%; height: 250px; 
+        background-color: #eee; overflow: hidden; display: none; flex-shrink: 0;
+    }
+    .gallery-slide {
+        position: absolute; width: 100%; height: 100%; 
+        object-fit: cover; object-position: center; 
+        opacity: 0; transition: opacity 0.5s ease-in-out;
+    }
+    .gallery-slide.active { opacity: 1; z-index: 1; }
+    .gallery-arrow {
+        position: absolute; top: 50%; transform: translateY(-50%);
+        background-color: rgba(0,0,0,0.3); color: white; border: none;
+        padding: 15px 10px; cursor: pointer; z-index: 2; font-size: 18px;
+        transition: background 0.2s;
+    }
+    .gallery-arrow:hover { background-color: rgba(0,0,0,0.8); }
+    .prev { left: 0; border-radius: 0 4px 4px 0; }
+    .next { right: 0; border-radius: 4px 0 0 4px; }
+    .gallery-loading {
+        position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+        color: #777; font-size: 0.9rem;
+    }
+
+    .panel-header {
+        padding: 15px 20px; border-bottom: 1px solid #eee;
+        display: flex; justify-content: space-between; align-items: center;
+        background-color: #f9f9f9; flex-shrink: 0; 
+    }
+    .panel-title { font-family: "unitpromedium", sans-serif; font-size: 1.15rem; color: #333; }
+    .panel-close-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #888; }
+    .panel-close-btn:hover { color: #000; }
+    .panel-content { flex: 1; overflow-y: auto; padding: 0; display: flex; flex-direction: column; }
+    .info-container { padding: 20px; }
+    .meta-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 0.95rem; }
+    .meta-table td { padding: 4px 0; vertical-align: middle; }
+    .meta-icon-col { width: 25px; text-align: left; color: #888; font-size: 1rem; padding-right: 8px; }
+    .meta-value { color: #333; font-weight: 500; }
+    .meta-value a { color: #1b75bb; text-decoration: none; }
+    .meta-value a:hover { text-decoration: underline; }
+    .description-block {
+        margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee;
+        font-size: 0.95rem; line-height: 1.5; color: #555;
+    }
+    .description-block p { margin-bottom: 10px; }
+
+    /* -------------------------------------------------------------------------- */
+    /* 7. IFRAME MODE                                                             */
+    /* -------------------------------------------------------------------------- */
+    html.iframe-mode #pageHeader,
+    html.iframe-mode #projectControls,
+    html.iframe-mode #sidePanel { display: none !important; }
+    
+    html.iframe-mode #controls { top: 10px; right: 10px; }
+    html.iframe-mode .toggle-group { min-width: 180px; margin-bottom: 8px; padding: 2px; }
+    html.iframe-mode .toggle-btn { padding: 6px 10px; font-size: 12px; }
+  </style>
+
+  <script src="https://js.arcgis.com/4.28/init.js"></script>
+
+  <script>
+    // --- 1. INITIAL DETECTION ---
+    (function(){
+        if(window.location.search.indexOf("iframe=1") > -1) {
+            document.documentElement.classList.add("iframe-mode");
+        }
+    })();
+
+    require([
+      "esri/Map", "esri/views/SceneView", "esri/layers/VectorTileLayer",
+      "esri/layers/ElevationLayer", "esri/layers/SceneLayer", "esri/layers/IntegratedMeshLayer",
+      "esri/layers/TileLayer", "esri/layers/FeatureLayer", "esri/Basemap", "esri/Ground",
+      "esri/geometry/geometryEngine", "esri/core/reactiveUtils", "esri/widgets/Home", "esri/Color"
+    ], (
+      Map, SceneView, VectorTileLayer, ElevationLayer, SceneLayer, IntegratedMeshLayer, 
+      TileLayer, FeatureLayer, Basemap, Ground, geometryEngine, reactiveUtils, Home, Color
+    ) => {
+
+      // DECLARE VIEW VARIABLE
+      let view = null;
+
+      // --- 2. CONFIGURATION & CONSTANTS ---
+      const CONFIG = {
+        urls: {
+          elevation:  "https://tiles.arcgis.com/tiles/SBTXIEUGWbqzUecw/arcgis/rest/services/dtm1m_wgs_test1_3/ImageServer",
+          vectorBase: "https://tiles.arcgis.com/tiles/SBTXIEUGWbqzUecw/arcgis/rest/services/zakladni_mapa_3D_model/VectorTileServer",
+          ortho:      "https://ags.cuzk.cz/arcgis1/rest/services/ORTOFOTO_WM/MapServer",
+          buildings:  "https://tiles.arcgis.com/tiles/SBTXIEUGWbqzUecw/arcgis/rest/services/budovy3D_2020_2/SceneServer",
+          bridges:    "https://services5.arcgis.com/SBTXIEUGWbqzUecw/arcgis/rest/services/Mosty3D_2020/SceneServer",
+          mesh:       "https://tiles.arcgis.com/tiles/SBTXIEUGWbqzUecw/arcgis/rest/services/praha2023_merged_WM/SceneServer",
+          boundaries: "https://services5.arcgis.com/SBTXIEUGWbqzUecw/arcgis/rest/services/Praha_z%C3%ADtra_%E2%80%93_POI/FeatureServer/1",
+          poi:        "https://services5.arcgis.com/SBTXIEUGWbqzUecw/arcgis/rest/services/Praha_z%C3%ADtra_%E2%80%93_POI/FeatureServer/0"
+        },
+        initialCamera: {
+          position: { latitude: 50.0701, longitude: 14.4346, z: 2200 },
+          heading: 297, tilt: 36
+        },
+        filter: "is_public = 1",
+        switchScale: 5000,
+        statusColors: {
+          1: "#1B75BB", // Planning
+          2: "#12BDCD", // Permit
+          3: "#FDBE15", // Construction
+          4: "#93C840", // Finished
+          default: "#999999"
+        }
+      };
+
+      const UI_ELEMENTS = {
+        viewDiv: document.getElementById("viewDiv"),
+        sidePanel: document.getElementById("sidePanel"),
+        lodIndicator: document.getElementById("lodIndicator"),
+        controls: document.getElementById("controls"),
+        projectControls: document.getElementById("projectControls"),
+        panelTitle: document.getElementById("panelTitle"),
+        panelDesc: document.getElementById("panelDesc"),
+        panelClose: document.getElementById("panelClose"),
+        galleryImages: document.getElementById("galleryImages"),
+        galleryContainer: document.getElementById("galleryContainer"),
+        btnPrev: document.getElementById("btnPrev"),
+        btnNext: document.getElementById("btnNext"),
+        btnFullScreen: document.getElementById("btnFullScreen")
+      };
+
+      const AppState = {
+        isFuture: true,
+        isRealistic: false,
+        clipGeometry: null,
+        highlightSelect: null,
+        isIframe: document.documentElement.classList.contains("iframe-mode"),
+        cachedButtons: []
+      };
+
+      // --- 3. UTILITIES & RENDERERS ---
+      
+      const Utils = {
+        getUrlParam: (name) => {
+          name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+          var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+          var results = regex.exec(location.search);
+          return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        },
+        hexToRGB: (hex, alpha = 1) => {
+          const c = new Color(hex);
+          return [c.r, c.g, c.b, alpha];
+        }
+      };
+
+      const Renderers = {
+        boundaryDetail: {
+          type: "simple",
+          symbol: { type: "simple-fill", color: [0, 0, 0, 0], outline: { color: "black", width: 2 } }
+        },
+        
+        createBoundaryFill: (hexColor) => ({
+          type: "simple-fill",
+          color: Utils.hexToRGB(hexColor, 0.5),
+          outline: { color: "black", width: 2 }
+        }),
+
+        createPngSymbol: (filename) => ({
+          type: "point-3d",
+          symbolLayers: [{
+            type: "icon", resource: { href: filename }, size: 20, outline: { color: "white", size: 0.5 }
+          }],
+          verticalOffset: { screenLength: 80, maxWorldLength: 80, minWorldLength: 50 },
+          callout: { type: "line", size: 1.5, color: [0, 0, 0, 0.5], border: null }
+        }),
+
+        createOverview3D: (hexColor) => ({
+          type: "simple",
+          symbol: {
+            type: "mesh-3d",
+            symbolLayers: [{
+              type: "fill",
+              material: { color: Utils.hexToRGB(hexColor), colorMixMode: "replace" },
+              edges: { type: "solid", color: [0, 0, 0, 0.3], size: 1 }
+            }]
+          }
+        }),
+
+        addEdges: (renderer) => {
+          if (!renderer) return null;
+          const newRenderer = renderer.clone();
+          const edgeStyle = { type: "solid", color: [50, 50, 50, 0.6], size: 1 };
+          const apply = (symbol) => {
+            if (symbol && symbol.type === "mesh-3d" && symbol.symbolLayers.length > 0) {
+              symbol.symbolLayers.items[0].edges = edgeStyle;
+            }
+          };
+          if (newRenderer.type === "simple") apply(newRenderer.symbol);
+          else if (newRenderer.type === "unique-value") newRenderer.uniqueValueInfos.forEach(info => apply(info.symbol));
+          return newRenderer;
+        }
+      };
+
+      const poiInfos = [
+        { value: 1, symbol: Renderers.createPngSymbol("1.png"), label: "Planning" },
+        { value: 2, symbol: Renderers.createPngSymbol("2.png"), label: "Permit Process" },
+        { value: 3, symbol: Renderers.createPngSymbol("3.png"), label: "Under Construction" },
+        { value: 4, symbol: Renderers.createPngSymbol("4.png"), label: "Finished" }
+      ];
+      
+      const poiRenderer = {
+        type: "unique-value", field: "status",
+        defaultSymbol: Renderers.createPngSymbol("1.png"),
+        uniqueValueInfos: poiInfos,
+        screenSizePerspectiveEnabled: false
+      };
+
+      // --- 4. LAYER INITIALIZATION ---
+
+      const layers = {
+        elevation:   new ElevationLayer({ url: CONFIG.urls.elevation }),
+        vectorBase:  new VectorTileLayer({ url: CONFIG.urls.vectorBase, maxScale: 0 }),
+        ortho:       new TileLayer({ url: CONFIG.urls.ortho, title: "Orthophoto", maxScale: 0 }),
+        buildings:   new SceneLayer({ url: CONFIG.urls.buildings, title: "Existing Buildings", popupEnabled: false }),
+        bridges:     new SceneLayer({ url: CONFIG.urls.bridges, title: "Existing Bridges", popupEnabled: false }),
+        mesh:        new IntegratedMeshLayer({ url: CONFIG.urls.mesh, title: "3D Mesh Prague", visible: false, popupEnabled: false }),
+        
+        boundary: new FeatureLayer({
+          url: CONFIG.urls.boundaries, title: "Project Boundaries",
+          elevationInfo: { mode: "on-the-ground" }, outFields: ["*"],
+          renderer: Renderers.boundaryDetail, definitionExpression: "1=0", popupEnabled: false
+        }),
+
+        poi: new FeatureLayer({
+          url: CONFIG.urls.poi, title: "Points of Interest",
+          elevationInfo: { mode: "absolute-height" }, definitionExpression: CONFIG.filter,
+          outFields: ["*"], renderer: poiRenderer, popupEnabled: false,
+          screenSizePerspectiveEnabled: false
+        }),
+        
+        projects: []
+      };
+
+      const map = new Map({
+        ground: new Ground({ layers: [layers.elevation] }),
+        basemap: new Basemap({ baseLayers: [layers.vectorBase] }),
+        layers: [layers.mesh, layers.boundary, layers.buildings, layers.bridges, layers.poi]
+      });
+
+      // --- 5. LOGIC: PRE-FETCH & INIT ---
+
+      async function getStartCamera() {
+           const projId = Utils.getUrlParam("project");
+           if(!projId) return CONFIG.initialCamera;
+
+           const q = layers.poi.createQuery();
+           q.where = `project_id = '${projId}'`;
+           q.outFields = ["viewpoint_latitude", "viewpoint_longitude", "viewpoint_z", "viewpoint_heading", "viewpoint_tilt"];
+           
+           try {
+             const res = await layers.poi.queryFeatures(q);
+             if(res.features.length > 0) {
+                const attr = res.features[0].attributes;
+                if(attr.viewpoint_latitude) {
+                    return {
+                        position: { latitude: attr.viewpoint_latitude, longitude: attr.viewpoint_longitude, z: attr.viewpoint_z || 400 },
+                        heading: attr.viewpoint_heading || 0, tilt: attr.viewpoint_tilt || 60
+                    };
+                }
+             }
+           } catch(e) { console.warn("Could not pre-fetch camera", e); }
+           return CONFIG.initialCamera;
+      }
+
+      async function initializeProjects() {
+        try {
+          const query = layers.poi.createQuery();
+          query.outFields = ["project_id", "models_service_url", "project_title", "status", "viewpoint_latitude", "viewpoint_longitude", "viewpoint_z", "viewpoint_heading", "viewpoint_tilt"];
+          query.where = CONFIG.filter;
+
+          const results = await layers.poi.queryFeatures(query);
+          
+          if (!results.features.length) return;
+
+          const requestedId = Utils.getUrlParam("project");
+          const validIds = new Set();
+          const boundaryInfos = [];
+          
+          results.features.forEach(f => {
+            const attr = f.attributes;
+            const statusColor = CONFIG.statusColors[attr.status] || CONFIG.statusColors.default;
+
+            if (attr.project_id) {
+              validIds.add(attr.project_id);
+              boundaryInfos.push({
+                value: attr.project_id,
+                symbol: Renderers.createBoundaryFill(statusColor)
+              });
+            }
+
+            if (attr.models_service_url?.trim()) {
+              const projLayer = new SceneLayer({ 
+                url: attr.models_service_url, title: "Project Layer", popupEnabled: false 
+              });
+              projLayer.overviewRenderer = Renderers.createOverview3D(statusColor);
+              layers.projects.push(projLayer);
+            }
+
+            if (attr.viewpoint_latitude && attr.viewpoint_longitude) {
+              const camera = {
+                position: { latitude: attr.viewpoint_latitude, longitude: attr.viewpoint_longitude, z: attr.viewpoint_z || 400 },
+                heading: attr.viewpoint_heading || 0, tilt: attr.viewpoint_tilt || 60
+              };
+              
+              // === UPDATE: Determine Icon Based on Status ===
+              const status = attr.status;
+              const iconName = (status >= 1 && status <= 4) ? `${status}.png` : "1.png";
+              
+              AppState.cachedButtons.push({ 
+                label: attr.project_title || "Project", 
+                camera: camera,
+                icon: iconName // Pass icon to UI generator
+              });
+            }
+          });
+
+          if (layers.projects.length > 0) {
+            map.addMany(layers.projects);
+            await Promise.all(layers.projects.map(l => l.load()));
+            layers.projects.forEach(l => {
+              l.detailedRendererWithEdges = Renderers.addEdges(l.renderer);
+            });
+          }
+
+          if (validIds.size > 0) {
+            const uniqueIds = Array.from(validIds).map(id => `'${id}'`).join(",");
+            const boundaryFilter = `project_id IN (${uniqueIds})`;
+            
+            layers.boundary.definitionExpression = boundaryFilter;
+            layers.boundary.overviewRenderer = {
+              type: "unique-value", field: "project_id",
+              defaultSymbol: Renderers.createBoundaryFill(CONFIG.statusColors.default),
+              uniqueValueInfos: boundaryInfos
+            };
+
+            const clipQuery = layers.boundary.createQuery();
+            clipQuery.where = boundaryFilter;
+            clipQuery.outSpatialReference = view.spatialReference;
+            
+            const clipResult = await layers.boundary.queryFeatures(clipQuery);
+            if (clipResult.features.length > 0) {
+              const geometries = clipResult.features.map(f => f.geometry);
+              AppState.clipGeometry = geometryEngine.union(geometries);
+              if (AppState.isFuture) applyClipping(true);
+            }
+          }
+
+          if (!AppState.isIframe) UiManager.createButtons(AppState.cachedButtons);
+
+        } catch (error) { console.error("Initialization Error:", error); }
+      }
+
+      function applyClipping(apply) {
+        if (!AppState.clipGeometry) return;
+        const filterEffect = apply ? { geometry: AppState.clipGeometry, spatialRelationship: "disjoint" } : null;
+        const clipEffect   = apply ? [{ geometry: AppState.clipGeometry, type: "clip" }] : null;
+        view.whenLayerView(layers.buildings).then(lv => lv.filter = filterEffect);
+        view.whenLayerView(layers.bridges).then(lv => lv.filter = filterEffect);
+        layers.mesh.modifications = clipEffect;
+      }
+
+      // --- 6. UI MANAGERS ---
+
+      const GalleryManager = {
+        interval: null, slides: [], index: 0,
+        show: function(i) {
+          const els = document.querySelectorAll(".gallery-slide");
+          if (!els.length) return;
+          this.index = (i >= els.length) ? 0 : (i < 0 ? els.length - 1 : i);
+          els.forEach(el => el.classList.remove("active"));
+          els[this.index].classList.add("active");
+        },
+        start: function() {
+          clearInterval(this.interval);
+          if (this.slides.length > 1) this.interval = setInterval(() => this.show(this.index + 1), 4000);
+        },
+        load: function(attachments) {
+          UI_ELEMENTS.galleryImages.innerHTML = "";
+          UI_ELEMENTS.btnPrev.style.display = "none";
+          UI_ELEMENTS.btnNext.style.display = "none";
+          if (!attachments || !attachments.length) {
+            UI_ELEMENTS.galleryContainer.style.display = "none";
+            return;
+          }
+          UI_ELEMENTS.galleryContainer.style.display = "block";
+          this.slides = []; this.index = 0;
+          attachments.forEach((att, i) => {
+            const img = document.createElement("img");
+            img.src = att.url; img.className = i === 0 ? "gallery-slide active" : "gallery-slide";
+            UI_ELEMENTS.galleryImages.appendChild(img);
+            this.slides.push(att.url);
+          });
+          if (this.slides.length > 1) {
+            UI_ELEMENTS.btnPrev.style.display = "block"; UI_ELEMENTS.btnNext.style.display = "block";
+            this.start();
+          }
+        },
+        clear: function() {
+          clearInterval(this.interval);
+          UI_ELEMENTS.galleryImages.innerHTML = '<div class="gallery-loading">Loading photos...</div>';
+          UI_ELEMENTS.galleryContainer.style.display = "none";
+        },
+        initListeners: function() {
+            UI_ELEMENTS.btnNext.onclick = () => { this.show(this.index + 1); this.start(); };
+            UI_ELEMENTS.btnPrev.onclick = () => { this.show(this.index - 1); this.start(); };
+        }
+      };
+
+      const PanelManager = {
+        open: function(attr) {
+          UI_ELEMENTS.panelTitle.innerText = attr.project_title || "Project Detail";
+          let html = '<table class="meta-table">';
+          const addRow = (icon, val, tip) => {
+            if (val) html += `<tr title="${tip}"><td class="meta-icon-col"><span class="${icon}"></span></td><td class="meta-value">${val}</td></tr>`;
+          };
+          addRow("esri-icon-map-pin", attr.project_address, "Address");
+          addRow("esri-icon-calendar", attr.completion_date, "Completion");
+          if (attr.site_area_sqm) addRow("esri-icon-polygon", `${attr.site_area_sqm} m²`, "Site Area");
+          if (attr.project_website) {
+             html += `<tr title="Project Website"><td class="meta-icon-col"><span class="esri-icon-link-external"></span></td><td class="meta-value"><a href="${attr.project_website}" target="_blank">Visit Website</a></td></tr>`;
+          }
+          html += '</table>';
+          if (attr.project_description) html += `<div class="description-block"><p>${attr.project_description}</p></div>`;
+          UI_ELEMENTS.panelDesc.innerHTML = html;
+          UI_ELEMENTS.sidePanel.classList.add("open");
+        },
+        close: function() {
+          UI_ELEMENTS.sidePanel.classList.remove("open");
+          GalleryManager.clear();
+          if (AppState.highlightSelect) { AppState.highlightSelect.remove(); AppState.highlightSelect = null; }
+        }
+      };
+
+      const UiManager = {
+        createButtons: (buttonsData) => {
+          UI_ELEMENTS.projectControls.innerHTML = "";
+          const header = document.createElement("div"); 
+          header.className = "project-header-text"; header.innerText = "Projects";
+          UI_ELEMENTS.projectControls.appendChild(header);
+          buttonsData.sort((a, b) => a.label.localeCompare(b.label));
+          
+          buttonsData.forEach(btnData => {
+            const btn = document.createElement("button");
+            btn.className = "ui-button";
+            // === UPDATE: Use dynamic icon here ===
+            btn.innerHTML = `<img src="${btnData.icon}" class="btn-icon"><span>${btnData.label}</span>`;
+            btn.onclick = () => view.goTo(btnData.camera, { duration: 2000, easing: "in-out-cubic" });
+            UI_ELEMENTS.projectControls.appendChild(btn);
+          });
+        },
+        setupToggles: () => {
+          const create = (labels, callback) => {
+            const group = document.createElement("div"); group.className = "toggle-group";
+            const btn1 = document.createElement("button"); btn1.className = "toggle-btn active"; btn1.innerText = labels[0];
+            const btn2 = document.createElement("button"); btn2.className = "toggle-btn"; btn2.innerText = labels[1];
+            const update = (isFirst) => {
+               if(isFirst) { btn1.classList.add("active"); btn2.classList.remove("active"); }
+               else { btn2.classList.add("active"); btn1.classList.remove("active"); }
+               callback(isFirst);
+            };
+            btn1.onclick = () => update(true); btn2.onclick = () => update(false);
+            group.appendChild(btn1); group.appendChild(btn2);
+            UI_ELEMENTS.controls.appendChild(group);
+            return { update };
+          };
+          create(["Future State", "Current State"], (isFuture) => {
+             AppState.isFuture = isFuture;
+             layers.projects.forEach(l => l.visible = isFuture);
+             applyClipping(isFuture);
+          });
+          const styleToggle = create(["Object Models", "Reality Mesh"], (isObjects) => {
+             AppState.isRealistic = !isObjects;
+             if(AppState.isRealistic) {
+               map.basemap = new Basemap({ baseLayers: [layers.ortho] });
+               layers.mesh.visible = true;
+               layers.buildings.visible = layers.bridges.visible = false;
+               view.environment.lighting.directShadowsEnabled = false;
+             } else {
+               map.basemap = new Basemap({ baseLayers: [layers.vectorBase] });
+               layers.mesh.visible = false;
+               layers.buildings.visible = layers.bridges.visible = true;
+               view.environment.lighting.directShadowsEnabled = true;
+             }
+          });
+          styleToggle.update(true);
+        },
+        setupFullscreen: () => {
+          if (AppState.isIframe) {
+              UI_ELEMENTS.btnFullScreen.style.display = "flex";
+              UI_ELEMENTS.btnFullScreen.innerHTML = '<span class="esri-icon-zoom-out-fixed"></span>';
+          }
+          UI_ELEMENTS.btnFullScreen.onclick = () => {
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(console.warn);
+            else if (document.exitFullscreen) document.exitFullscreen();
+          };
+          document.addEventListener("fullscreenchange", () => {
+            if (document.fullscreenElement) {
+              document.documentElement.classList.remove("iframe-mode");
+              UI_ELEMENTS.btnFullScreen.innerHTML = '<span class="esri-icon-zoom-in-fixed"></span>';
+              if (UI_ELEMENTS.projectControls.childElementCount <= 1 && AppState.cachedButtons.length > 0) {
+                 UiManager.createButtons(AppState.cachedButtons);
+              }
+            } else {
+              if (AppState.isIframe) {
+                document.documentElement.classList.add("iframe-mode");
+                UI_ELEMENTS.btnFullScreen.innerHTML = '<span class="esri-icon-zoom-out-fixed"></span>';
+                PanelManager.close();
+              }
+            }
+          });
+        }
+      };
+
+      // --- 7. EVENT LISTENERS & FINAL SETUP ---
+
+      function setupLODWatcher() {
+        reactiveUtils.watch(() => view.scale, (scale) => {
+          const isOverview = scale > CONFIG.switchScale;
+          const targetLOD = isOverview ? 2 : 3;
+          UI_ELEMENTS.lodIndicator.innerHTML = `Scale 1:${Math.round(scale)}<br>Mode: ${isOverview ? "Overview" : "Detailed"}`;
+
+          layers.projects.forEach((layer) => {
+            const whereClause = `LOD = ${targetLOD} OR LOD IS NULL`;
+            view.whenLayerView(layer).then(lv => {
+               if (!lv.filter || lv.filter.where !== whereClause) lv.filter = { where: whereClause };
+            });
+            const targetRenderer = isOverview ? layer.overviewRenderer : layer.detailedRendererWithEdges;
+            if (layer.renderer !== targetRenderer) layer.renderer = targetRenderer;
+          });
+
+          const targetBoundaryRenderer = isOverview ? layers.boundary.overviewRenderer : Renderers.boundaryDetail;
+          if (targetBoundaryRenderer && layers.boundary.renderer !== targetBoundaryRenderer) {
+            layers.boundary.renderer = targetBoundaryRenderer;
+          }
+        }, { initial: true });
+      }
+
+      async function setupInteractivity() {
+        const poiLayerView = await view.whenLayerView(layers.poi);
+        view.on("click", async (event) => {
+          if (document.documentElement.classList.contains("iframe-mode")) return; 
+          const response = await view.hitTest(event);
+          const result = response.results.find(r => r.graphic && r.graphic.layer === layers.poi);
+
+          if (result) {
+            const g = result.graphic;
+            const objectId = g.getObjectId();
+            if (AppState.highlightSelect) AppState.highlightSelect.remove();
+            AppState.highlightSelect = poiLayerView.highlight(g);
+
+            const featureSet = await layers.poi.queryFeatures({ objectIds: [objectId], outFields: ["*"] });
+            if (!featureSet.features.length) return;
+            
+            PanelManager.open(featureSet.features[0].attributes);
+            GalleryManager.clear();
+            const attachments = await layers.poi.queryAttachments({ objectIds: [objectId] });
+            GalleryManager.load(attachments[objectId]);
+          } else { PanelManager.close(); }
+        });
+      }
+
+      // --- 8. EXECUTION ---
+      
+      getStartCamera().then(startCamera => {
+          view = new SceneView({
+            container: "viewDiv", map: map,
+            camera: startCamera, 
+            qualityProfile: "high", 
+            environment: { atmosphereEnabled: true, lighting: { directShadowsEnabled: true } },
+            highlightOptions: { color: [255, 0, 0, 1], haloOpacity: 0.8, fillOpacity: 0.2 }
+          });
+
+          view.ui.add(new Home({ view: view }), "top-left");
+
+          view.when(async () => {
+            await initializeProjects();
+            setupLODWatcher();
+            UiManager.setupToggles();
+            UiManager.setupFullscreen();
+            UI_ELEMENTS.panelClose.onclick = PanelManager.close;
+            GalleryManager.initListeners();
+            setupInteractivity();
+          });
+      });
+
+    });
+  </script>
+</head>
+<body>
+  <div id="viewDiv">
+      <div id="pageHeader">
+        <img src="https://app.iprpraha.cz/apl/app/model3d/img/ipr_logo.png" alt="IPR Logo">Future Development of Prague
+      </div>
+      <div id="controls"></div>
+      
+      <div id="projectControls"></div>
+      
+      <button id="btnFullScreen">
+        <span class="esri-icon-zoom-out-fixed"></span>
+      </button>
+
+      <div id="lodIndicator">Initializing...</div>
+  </div>
+
+  <div id="sidePanel">
+      <div id="galleryContainer">
+          <div id="galleryImages"></div>
+          <button class="gallery-arrow prev" id="btnPrev">&#10094;</button>
+          <button class="gallery-arrow next" id="btnNext">&#10095;</button>
+      </div>
+
+      <div class="panel-header">
+          <div class="panel-title" id="panelTitle">Project Detail</div>
+          <button class="panel-close-btn" id="panelClose">&times;</button>
+      </div>
+
+      <div class="panel-content">
+          <div class="info-container">
+              <div class="panel-description" id="panelDesc"></div>
+          </div>
+      </div>
+  </div>
+</body>
+</html>
