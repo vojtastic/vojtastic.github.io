@@ -1,0 +1,899 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rozvrh konference GIS 2026</title>
+<style>
+:root{
+  --font:"Segoe UI Variable Text","Segoe UI Variable","Segoe UI",system-ui,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+  --font-d:"Segoe UI Variable Display","Segoe UI Variable","Segoe UI",system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+  --bg:#f3f3f3;
+  --mica:radial-gradient(1200px 640px at 0% 0%,#e3ecf8 0%,transparent 60%),radial-gradient(900px 520px at 100% 0%,#efe8f8 0%,transparent 55%),#f3f3f3;
+  --layer:#fbfbfb; --surface:#ffffff; --surface-h:#f7f7f7; --subtle:#f0f0f0; --subtle-h:#e6e6e6;
+  --stroke:#e3e3e3; --stroke-s:#d1d1d1; --grid:#e4e4e4; --grid-q:#f1f1f1;
+  --fg:#1a1a1a; --fg2:#424242; --fg3:#616161; --fg4:#8a8a8a;
+  --brand:#0f6cbd; --brand-bg:#0f6cbd; --brand-bg-h:#115ea3; --brand-tint:#ebf3fc;
+  --danger:#c50f1f; --danger-tint:#fdf3f4;
+  --gold:#e8a200; --gold-bg:#fff4ce; --gold-fg:#835b00;
+  --acrylic:rgba(250,250,250,.78);
+  --sh2:0 0 2px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.14);
+  --sh4:0 0 2px rgba(0,0,0,.12),0 2px 4px rgba(0,0,0,.14);
+  --sh8:0 0 2px rgba(0,0,0,.12),0 4px 8px rgba(0,0,0,.14);
+  --sh28:0 0 8px rgba(0,0,0,.12),0 14px 28px rgba(0,0,0,.18);
+  --c-spol:#0f6cbd; --c-jiz:#038387; --c-ter:#8764b8; --c-mini:#ca5010; --c-stanek:#107c10; --c-social:#c239b3;
+  --tint:9%;
+  --axisw:64px; --colmin:214px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#1c1c1c;
+    --mica:radial-gradient(1200px 640px at 0% 0%,#1b2838 0%,transparent 60%),radial-gradient(900px 520px at 100% 0%,#28203a 0%,transparent 55%),#1c1c1c;
+    --layer:#232323; --surface:#2d2d2d; --surface-h:#353535; --subtle:#2f2f2f; --subtle-h:#3b3b3b;
+    --stroke:#3a3a3a; --stroke-s:#4b4b4b; --grid:#343434; --grid-q:#2a2a2a;
+    --fg:#ffffff; --fg2:#d6d6d6; --fg3:#adadad; --fg4:#858585;
+    --brand:#479ef5; --brand-bg:#115ea3; --brand-bg-h:#0f6cbd; --brand-tint:#0e2a47;
+    --danger:#f1707b; --danger-tint:#3b1a1d;
+    --gold:#ffc83d; --gold-bg:#463100; --gold-fg:#ffd96b;
+    --acrylic:rgba(36,36,36,.8);
+    --sh2:0 0 2px rgba(0,0,0,.24),0 1px 2px rgba(0,0,0,.28);
+    --sh4:0 0 2px rgba(0,0,0,.24),0 2px 4px rgba(0,0,0,.28);
+    --sh8:0 0 2px rgba(0,0,0,.24),0 4px 8px rgba(0,0,0,.28);
+    --sh28:0 0 8px rgba(0,0,0,.24),0 14px 28px rgba(0,0,0,.4);
+    --c-spol:#479ef5; --c-jiz:#4dc4c8; --c-ter:#b696e0; --c-mini:#f29d61; --c-stanek:#6ccb5f; --c-social:#ee8fe6;
+    --tint:15%;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1c1c1c;
+  --mica:radial-gradient(1200px 640px at 0% 0%,#1b2838 0%,transparent 60%),radial-gradient(900px 520px at 100% 0%,#28203a 0%,transparent 55%),#1c1c1c;
+  --layer:#232323; --surface:#2d2d2d; --surface-h:#353535; --subtle:#2f2f2f; --subtle-h:#3b3b3b;
+  --stroke:#3a3a3a; --stroke-s:#4b4b4b; --grid:#343434; --grid-q:#2a2a2a;
+  --fg:#ffffff; --fg2:#d6d6d6; --fg3:#adadad; --fg4:#858585;
+  --brand:#479ef5; --brand-bg:#115ea3; --brand-bg-h:#0f6cbd; --brand-tint:#0e2a47;
+  --danger:#f1707b; --danger-tint:#3b1a1d;
+  --gold:#ffc83d; --gold-bg:#463100; --gold-fg:#ffd96b;
+  --acrylic:rgba(36,36,36,.8);
+  --sh2:0 0 2px rgba(0,0,0,.24),0 1px 2px rgba(0,0,0,.28);
+  --sh4:0 0 2px rgba(0,0,0,.24),0 2px 4px rgba(0,0,0,.28);
+  --sh8:0 0 2px rgba(0,0,0,.24),0 4px 8px rgba(0,0,0,.28);
+  --sh28:0 0 8px rgba(0,0,0,.24),0 14px 28px rgba(0,0,0,.4);
+  --c-spol:#479ef5; --c-jiz:#4dc4c8; --c-ter:#b696e0; --c-mini:#f29d61; --c-stanek:#6ccb5f; --c-social:#ee8fe6;
+  --tint:15%;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{
+  font-family:var(--font);font-size:14px;color:var(--fg);
+  background:var(--mica);background-color:var(--bg);background-attachment:fixed;
+  display:flex;flex-direction:column;height:100dvh;overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--fg);outline-offset:1px;border-radius:4px}
+.ic{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.ic.fill{fill:currentColor;stroke:none}
+
+/* App bar */
+.appbar{display:flex;align-items:center;gap:16px;padding:12px 20px;background:var(--acrylic);
+  -webkit-backdrop-filter:blur(30px) saturate(1.5);backdrop-filter:blur(30px) saturate(1.5);border-bottom:1px solid var(--stroke);flex:none}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.logo{width:38px;height:38px;border-radius:9px;display:grid;place-items:center;flex:none;color:#fff;
+  background:linear-gradient(135deg,#0f6cbd 0%,#5b5fc7 55%,#8764b8 100%);box-shadow:var(--sh4)}
+.logo .ic{width:22px;height:22px;stroke-width:1.6}
+.brand h1{font-family:var(--font-d);font-size:18px;line-height:24px;font-weight:600;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand p{margin:0;font-size:12px;color:var(--fg3)}
+.search{margin-left:auto;position:relative;width:min(400px,40vw);display:flex;align-items:center}
+.search .ic{position:absolute;left:10px;color:var(--fg3);pointer-events:none}
+.search input{width:100%;height:32px;padding:0 70px 0 34px;border:1px solid var(--stroke);border-bottom-color:var(--fg4);
+  border-radius:4px;background:var(--surface);color:var(--fg);font:inherit;font-size:13.5px;outline:none}
+.search input:focus{border-bottom:2px solid var(--brand);padding-bottom:0}
+.search input::-webkit-search-cancel-button{display:none}
+#qcount{position:absolute;right:10px;font-size:11.5px;color:var(--fg3);pointer-events:none}
+.icon-btn{width:32px;height:32px;border-radius:4px;border:0;background:transparent;display:grid;place-items:center;cursor:pointer;color:var(--fg2);flex:none}
+.icon-btn:hover{background:var(--subtle-h)}
+
+/* Toolbar */
+.toolbar{display:flex;align-items:center;flex-wrap:wrap;gap:8px 14px;padding:6px 20px 0;flex:none}
+.pivot{display:flex;gap:2px}
+.pivot button{position:relative;border:0;background:transparent;padding:10px 12px 12px;font-size:14px;color:var(--fg2);cursor:pointer;border-radius:4px;display:inline-flex;align-items:center;gap:6px}
+.pivot button:hover{background:var(--subtle)}
+.pivot button.on{color:var(--fg);font-weight:600}
+.pivot button.on::after{content:"";position:absolute;left:12px;right:12px;bottom:3px;height:3px;border-radius:2px;background:var(--brand)}
+.pivot .d{color:var(--fg3);font-weight:400}
+.pill{font-size:11px;font-weight:600;line-height:16px;padding:0 6px;border-radius:999px;background:var(--subtle-h);color:var(--fg2)}
+.pill.star{background:var(--gold-bg);color:var(--gold-fg)}
+.spacer{flex:1}
+.switch{display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-size:13.5px;user-select:none;position:relative}
+.switch input{position:absolute;opacity:0;width:1px;height:1px}
+.switch .trk{width:40px;height:20px;border-radius:10px;border:1px solid var(--fg3);position:relative;transition:background .15s,border-color .15s;flex:none}
+.switch .trk::after{content:"";position:absolute;top:3px;left:3px;width:12px;height:12px;border-radius:50%;background:var(--fg2);transition:left .15s}
+.switch input:checked + .trk{background:var(--brand-bg);border-color:transparent}
+.switch input:checked + .trk::after{left:23px;background:#fff}
+.switch input:focus-visible + .trk{outline:2px solid var(--fg);outline-offset:2px}
+.badge{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--brand-bg);color:#fff;font-size:11px;font-weight:600}
+.badge.warn{background:var(--danger);color:#fff}
+.badge:empty{display:none}
+.btn{height:32px;padding:0 12px;border-radius:4px;border:1px solid var(--stroke-s);background:var(--surface);color:var(--fg);
+  font-weight:600;font-size:13.5px;display:inline-flex;align-items:center;gap:6px;cursor:pointer;white-space:nowrap}
+.btn:hover{background:var(--surface-h)}
+.btn.primary{background:var(--brand-bg);border-color:transparent;color:#fff}
+.btn.primary:hover{background:var(--brand-bg-h)}
+.btn.subtle{background:transparent;border-color:transparent;font-weight:400}
+.btn.subtle:hover{background:var(--subtle-h)}
+.seg{display:inline-flex;border:1px solid var(--stroke-s);border-radius:4px;overflow:hidden;background:var(--surface)}
+.seg button{border:0;background:transparent;height:30px;padding:0 11px;font-size:13px;color:var(--fg2);display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+.seg button + button{border-left:1px solid var(--stroke)}
+.seg button:hover:not(:disabled){background:var(--subtle)}
+.seg button.on{background:var(--brand-tint);color:var(--brand);font-weight:600}
+.seg button:disabled{opacity:.4;cursor:default}
+
+/* Chips */
+.chips{display:flex;flex-wrap:wrap;gap:8px;padding:10px 20px 12px;flex:none;align-items:center}
+.chip{display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 12px;border-radius:999px;border:1px solid var(--stroke);
+  background:var(--surface);font-size:12.5px;color:var(--fg2);cursor:pointer;box-shadow:var(--sh2)}
+.chip:hover{background:var(--surface-h)}
+.chip .dot{width:10px;height:10px;border-radius:50%;background:var(--c)}
+.chip.off{background:transparent;color:var(--fg4);box-shadow:none}
+.chip.off .dot{background:transparent;box-shadow:inset 0 0 0 1.5px var(--c)}
+.chips .hint{font-size:12px;color:var(--fg4);margin-left:4px}
+
+/* Main */
+main{flex:1;min-height:0;padding:0 20px;transition:padding-right .28s cubic-bezier(.1,.9,.2,1)}
+.scroller{height:100%;overflow:auto;background:var(--layer);border:1px solid var(--stroke);border-radius:8px;box-shadow:var(--sh4);position:relative;overscroll-behavior:contain}
+
+/* Grid */
+.sched{min-width:calc(var(--axisw) + var(--cols) * var(--colmin))}
+.sched-head,.sched-body{display:grid;grid-template-columns:var(--axisw) repeat(var(--cols),minmax(var(--colmin),1fr))}
+.sched-head{position:sticky;top:0;z-index:7;background:var(--acrylic);-webkit-backdrop-filter:blur(24px) saturate(1.4);backdrop-filter:blur(24px) saturate(1.4);border-bottom:1px solid var(--stroke)}
+.corner{position:sticky;left:0;z-index:8;background:var(--layer);border-right:1px solid var(--stroke)}
+.th{padding:10px 12px;display:flex;align-items:center;gap:9px;font-size:13px;border-left:1px solid var(--stroke);min-width:0}
+.th:first-of-type{border-left:0}
+.th .dot{width:10px;height:10px;border-radius:50%;background:var(--c);flex:none}
+.th b{font-weight:600;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.th small{display:block;color:var(--fg3);font-size:11px}
+.sched-body{position:relative}
+.axis{position:sticky;left:0;z-index:6;background:var(--layer);border-right:1px solid var(--stroke)}
+.tick{position:absolute;right:9px;transform:translateY(-50%);font-size:11.5px;color:var(--fg3);font-variant-numeric:tabular-nums;font-weight:600}
+.tick.half{font-size:10px;color:var(--fg4);font-weight:400}
+.col{position:relative;border-left:1px solid var(--stroke);
+  background:
+    repeating-linear-gradient(to bottom,var(--grid) 0 1px,transparent 1px calc(var(--ppm) * 60)) 0 var(--hoff) / 100% auto,
+    repeating-linear-gradient(to bottom,var(--grid-q) 0 1px,transparent 1px calc(var(--ppm) * 15)) 0 var(--qoff) / 100% auto}
+.col:nth-child(2){border-left:0}
+.under,.overlay{position:absolute;top:0;bottom:0;left:var(--axisw);right:0;pointer-events:none}
+.under{z-index:0}
+.overlay{z-index:5}
+.band{position:absolute;left:0;right:0;display:none;background:color-mix(in srgb,var(--brand) 9%,transparent);
+  border-top:1px dashed color-mix(in srgb,var(--brand) 55%,transparent);border-bottom:1px dashed color-mix(in srgb,var(--brand) 55%,transparent)}
+.focusing .band{display:block}
+.nowline{position:absolute;left:0;right:0;height:2px;background:var(--danger);display:none}
+.nowline::before{content:"";position:absolute;left:-5px;top:-4px;width:10px;height:10px;border-radius:50%;background:var(--danger)}
+.nowline span{position:absolute;left:10px;top:-20px;font-size:11px;font-weight:600;color:#fff;background:var(--danger);padding:1px 7px;border-radius:999px}
+
+.sess{position:absolute;left:4px;right:4px;border-radius:8px;background:color-mix(in srgb,var(--c) var(--tint),transparent);transition:opacity .15s}
+.sess:not(:has(.card:not(.filtered))){opacity:.35}
+.card{position:absolute;left:3px;right:3px;display:flex;flex-direction:column;text-align:left;padding:5px 8px 5px 11px;
+  border-radius:6px;border:1px solid var(--stroke);background:var(--surface);overflow:hidden;cursor:pointer;
+  box-shadow:inset 3px 0 0 var(--c),var(--sh2);transition:box-shadow .12s,opacity .15s,background .12s}
+.card:hover{background:var(--surface-h);box-shadow:inset 3px 0 0 var(--c),var(--sh8);z-index:2}
+.card:focus-visible{outline-offset:-2px}
+.card.tiny{padding-top:2px;padding-bottom:2px;justify-content:center}
+.card .meta{font-size:11px;line-height:15px;color:var(--fg3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums;flex:none}
+.card .meta b{color:var(--c);font-weight:600}
+.card .ttl{font-size:12.5px;line-height:16.5px;font-weight:600;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;flex:none}
+.card .sp{font-size:11.5px;line-height:15px;color:var(--fg3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:none}
+.star-ind{position:absolute;top:4px;right:5px;color:var(--gold);display:none}
+.star-ind .ic{width:13px;height:13px}
+.card.starred .star-ind{display:block}
+.card.starred .meta,.card.starred.tiny .ttl{padding-right:14px}
+.card.conflict{border-color:var(--danger);box-shadow:inset 3px 0 0 var(--c),0 0 0 1px var(--danger),var(--sh2)}
+.card.conflict .star-ind{color:var(--danger)}
+.card.match{background:color-mix(in srgb,var(--gold) 18%,var(--surface))}
+.card.filtered{opacity:.16;pointer-events:none;filter:saturate(.3)}
+.grid-mode.focusing .card:not(.focused):not(.conc):not(.filtered){opacity:.3}
+.grid-mode.focusing .card.conc{box-shadow:inset 3px 0 0 var(--c),var(--sh8)}
+.card.focused{box-shadow:inset 3px 0 0 var(--c),0 0 0 2px var(--brand),var(--sh8);z-index:3}
+
+.card.span-ev{left:4px;right:4px;flex-direction:row;align-items:center;justify-content:center;gap:12px;pointer-events:auto;
+  border:1px dashed var(--c);box-shadow:none;text-align:center;flex-wrap:wrap;
+  background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--c) 16%,var(--layer)) 0 12px,color-mix(in srgb,var(--c) 8%,var(--layer)) 12px 24px)}
+.card.span-ev:hover{box-shadow:var(--sh8)}
+.card.span-ev b{font-size:14px;font-weight:600}
+.card.span-ev span{font-size:12.5px;color:var(--fg2)}
+.card.span-ev i{font-size:12px;color:var(--fg3);font-style:normal}
+
+/* List */
+.list{max-width:1000px;margin:0 auto;padding:4px 16px 40px}
+.list section:not(:has(.row:not(.filtered))){display:none}
+.list h3{position:sticky;top:0;z-index:2;margin:0;padding:14px 4px 6px;font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--fg3);background:var(--layer)}
+.row{display:grid;grid-template-columns:118px 4px minmax(0,1fr) auto;gap:12px;align-items:start;padding:10px 12px;margin:0 0 6px;
+  border:1px solid var(--stroke);border-radius:6px;background:var(--surface);box-shadow:var(--sh2);cursor:pointer;transition:background .12s,box-shadow .12s}
+.row:hover{background:var(--surface-h);box-shadow:var(--sh8)}
+.row.filtered{display:none}
+.row.match{background:color-mix(in srgb,var(--gold) 14%,var(--surface))}
+.row.focused{border-color:var(--brand);box-shadow:0 0 0 1px var(--brand),var(--sh4)}
+.row.conflict{border-color:var(--danger)}
+.r-time{font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;padding-top:1px}
+.r-bar{align-self:stretch;border-radius:2px;background:var(--c)}
+.r-main{display:flex;flex-direction:column;gap:2px;min-width:0}
+.r-sub{font-size:12px;color:var(--fg3)}
+.r-ttl{font-size:14px;font-weight:600;line-height:19px}
+.r-sp{font-size:12.5px;color:var(--fg2)}
+.r-side{display:flex;align-items:center;gap:8px}
+.conc-chip{font-size:11px;color:var(--fg3);border:1px solid var(--stroke);border-radius:999px;padding:1px 8px;white-space:nowrap}
+.live-chip{font-style:normal;font-size:11px;font-weight:600;color:#fff;background:var(--danger);border-radius:999px;padding:0 7px;margin-left:6px}
+.star-btn{width:30px;height:30px;border-radius:4px;display:grid;place-items:center;color:var(--fg3);cursor:pointer}
+.star-btn:hover{background:var(--subtle-h)}
+.star-btn .fill{display:none;color:var(--gold)}
+.starred .star-btn .fill{display:block}
+.starred .star-btn .ic:not(.fill){display:none}
+.empty{display:none;text-align:center;color:var(--fg3);padding:48px 0}
+.list:not(:has(.row:not(.filtered))) .empty{display:block}
+
+/* Flyout */
+.flyout{position:fixed;top:8px;right:8px;bottom:8px;width:min(400px,calc(100vw - 16px));z-index:50;display:flex;flex-direction:column;overflow:hidden;
+  background:var(--acrylic);-webkit-backdrop-filter:blur(40px) saturate(1.6);backdrop-filter:blur(40px) saturate(1.6);
+  border:1px solid var(--stroke);border-radius:12px;box-shadow:var(--sh28);
+  transform:translateX(calc(100% + 24px));transition:transform .28s cubic-bezier(.1,.9,.2,1);visibility:hidden}
+.flyout.open{transform:none;visibility:visible}
+.fly-head{display:flex;align-items:center;gap:9px;padding:12px 10px 4px 18px;flex:none}
+.fly-head .dot{width:10px;height:10px;border-radius:50%;background:var(--c)}
+.fly-loc{font-size:13px;font-weight:600;color:var(--fg2);flex:1}
+.fly-body{overflow:auto;padding:0 18px 20px}
+.eyebrow{font-size:12px;font-weight:600;color:var(--c);margin-top:6px}
+.fly-body h2{font-family:var(--font-d);font-size:20px;line-height:26px;font-weight:600;margin:4px 0 12px}
+.info{display:flex;gap:10px;align-items:flex-start;color:var(--fg2);font-size:13.5px;margin:7px 0}
+.info .ic{color:var(--fg3);margin-top:2px}
+.note-box{font-size:12.5px;line-height:17px;color:var(--fg2);background:var(--subtle);border-radius:6px;padding:8px 10px;margin:10px 0}
+.warn-box{display:flex;gap:8px;font-size:12.5px;color:var(--danger);background:var(--danger-tint);border-radius:6px;padding:8px 10px;margin:10px 0}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
+.fly-body h4{font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--fg3);margin:20px 0 6px;display:flex;align-items:center;gap:6px}
+.speakers{list-style:none;margin:0;padding:0}
+.speakers li{padding:7px 0;border-top:1px solid var(--stroke)}
+.speakers li:first-child{border-top:0}
+.speakers b{display:block;font-weight:600;font-size:13.5px}
+.speakers span{font-size:12.5px;color:var(--fg3)}
+.mlist{display:flex;flex-direction:column;gap:2px}
+.mrow{display:grid;grid-template-columns:10px minmax(0,1fr) auto;gap:10px;align-items:start;width:100%;text-align:left;padding:7px 8px;border:0;border-radius:6px;background:transparent;cursor:pointer}
+.mrow:hover{background:var(--subtle-h)}
+.mrow.cur{background:var(--brand-tint)}
+.mrow .dot{width:10px;height:10px;border-radius:50%;background:var(--c);margin-top:4px}
+.mrow small{display:block;font-size:11.5px;color:var(--fg3);font-variant-numeric:tabular-nums}
+.mrow .mt{font-size:13px;font-weight:600;line-height:17px}
+.mrow > .ic{color:var(--gold);margin-top:3px}
+.muted{color:var(--fg3);font-size:13px;margin:4px 0}
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.28);z-index:40;opacity:0;pointer-events:none;transition:opacity .2s}
+
+/* Footer + toast */
+.note{flex:none;padding:8px 20px 10px;font-size:12px;color:var(--fg3);display:flex;flex-wrap:wrap;gap:4px 18px}
+.note a{color:var(--brand)}
+.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);opacity:0;z-index:60;pointer-events:none;
+  background:var(--acrylic);-webkit-backdrop-filter:blur(30px);backdrop-filter:blur(30px);border:1px solid var(--stroke);
+  border-radius:8px;box-shadow:var(--sh28);padding:10px 16px;font-size:13.5px;transition:opacity .2s,transform .2s;max-width:calc(100vw - 32px)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media (min-width:1180px){ body.fly-open main{padding-right:420px} }
+@media (max-width:760px){
+  :root{--axisw:52px;--colmin:184px}
+  .appbar{flex-wrap:wrap;padding:10px 12px;gap:10px}
+  .brand p{display:none}
+  .search{order:3;width:100%;margin-left:0}
+  .toolbar{padding:4px 12px 0;gap:6px 10px}
+  .chips{padding:8px 12px 10px}
+  .chips .hint{display:none}
+  main{padding:0 8px}
+  .note{padding:6px 12px 8px}
+  .row{grid-template-columns:4px minmax(0,1fr) auto;gap:10px}
+  .row .r-time{grid-column:2;grid-row:1;font-size:12px}
+  .row .r-bar{grid-column:1;grid-row:1 / span 2}
+  .row .r-main{grid-column:2;grid-row:2}
+  .row .r-side{grid-column:3;grid-row:1 / span 2}
+  .conc-chip{display:none}
+  .flyout{top:auto;left:8px;right:8px;width:auto;max-height:80dvh;transform:translateY(calc(100% + 24px))}
+  .scrim.show{opacity:1;pointer-events:auto}
+}
+</style>
+</head>
+<body>
+<header class="appbar">
+  <div class="brand">
+    <div class="logo" id="logo"></div>
+    <div><h1>Konference GIS Esri v ČR 2026</h1><p>4.–5. listopadu 2026 · interaktivní rozvrh</p></div>
+  </div>
+  <label class="search"><span id="searchIc"></span><input id="q" type="search" placeholder="Hledat přednášku, řečníka, organizaci…  ( / )" autocomplete="off"><span id="qcount"></span></label>
+  <button class="icon-btn" id="themeBtn" title="Motiv: podle systému"></button>
+</header>
+
+<div class="toolbar">
+  <div class="pivot" role="tablist" id="dayTabs"></div>
+  <div class="spacer"></div>
+  <label class="switch" title="Zobrazit jen položky označené hvězdičkou">
+    <input type="checkbox" id="onlyMine"><span class="trk"></span>
+    <span>Můj program</span><span class="badge" id="mineBadge"></span><span class="badge warn" id="confBadge" title="Počet konfliktů v mém programu"></span>
+  </label>
+  <button class="btn subtle" id="exportBtn" title="Stáhnout můj program jako kalendář (.ics)"></button>
+  <div class="seg" id="viewSeg"></div>
+  <div class="seg" id="zoomSeg" title="Měřítko časové osy"></div>
+</div>
+
+<div class="chips" id="chips"></div>
+
+<main><div class="scroller" id="scroller"></div></main>
+
+<footer class="note">
+  <span><b>~</b> = čas jednotlivé přednášky je dopočítaný (čas sekce rovnoměrně rozdělený mezi přednášky). Minisemináře a stánek mají přesné časy.</span>
+  <span>Najeď na položku → uvidíš, co běží souběžně · klikni → detail · ★ přidá do mého programu</span>
+  <span>Zdroj: <a href="https://www.arcdata.cz/cs-cz/akce/2026/konference/prednasky" target="_blank" rel="noopener">arcdata.cz</a></span>
+</footer>
+
+<aside class="flyout" id="flyout" aria-label="Detail položky"></aside>
+<div class="scrim" id="scrim"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+'use strict';
+
+/* ---------- Ikony ---------- */
+const PATHS = {
+  search:'<circle cx="8.5" cy="8.5" r="5.5"/><path d="M12.6 12.6L17 17"/>',
+  star:'<path d="M10 2.6l2.25 4.6 5.05.73-3.65 3.55.86 5.02L10 14.13l-4.51 2.37.86-5.02L2.7 7.93l5.05-.73z"/>',
+  clock:'<circle cx="10" cy="10" r="7"/><path d="M10 6v4.2l2.6 1.6"/>',
+  pin:'<path d="M10 17.5s5.5-4.9 5.5-9a5.5 5.5 0 0 0-11 0c0 4.1 5.5 9 5.5 9z"/><circle cx="10" cy="8.5" r="2"/>',
+  cal:'<rect x="3" y="4" width="14" height="13" rx="2"/><path d="M3 8h14M7 2.5v3M13 2.5v3"/>',
+  dismiss:'<path d="M5 5l10 10M15 5L5 15"/>',
+  grid:'<rect x="3" y="3" width="6" height="6" rx="1.3"/><rect x="11" y="3" width="6" height="6" rx="1.3"/><rect x="3" y="11" width="6" height="6" rx="1.3"/><rect x="11" y="11" width="6" height="6" rx="1.3"/>',
+  list:'<path d="M7.5 5H17M7.5 10H17M7.5 15H17M3.5 5h.5M3.5 10h.5M3.5 15h.5"/>',
+  sun:'<circle cx="10" cy="10" r="3.4"/><path d="M10 2.2v1.9M10 15.9v1.9M2.2 10h1.9M15.9 10h1.9M4.5 4.5l1.3 1.3M14.2 14.2l1.3 1.3M4.5 15.5l1.3-1.3M14.2 5.8l1.3-1.3"/>',
+  moon:'<path d="M16 12.6A6.6 6.6 0 0 1 7.4 4a6.6 6.6 0 1 0 8.6 8.6z"/>',
+  auto:'<circle cx="10" cy="10" r="7"/><path d="M10 3a7 7 0 0 1 0 14z" fill="currentColor"/>',
+  download:'<path d="M10 3v10M6 9.2l4 4 4-4M4 16.5h12"/>',
+  warn:'<path d="M10 3.2l7.4 13H2.6z"/><path d="M10 8.2v3.6M10 14.1v.1"/>',
+  plus:'<path d="M10 4.5v11M4.5 10h11"/>',
+  minus:'<path d="M4.5 10h11"/>',
+  map:'<path d="M3 5.2l4.6-2 4.8 2 4.6-2v11.6l-4.6 2-4.8-2-4.6 2z"/><path d="M7.6 3.2v11.6M12.4 5.2v11.6"/>'
+};
+const svg = (n, fill) => `<svg class="ic${fill ? ' fill' : ''}" viewBox="0 0 20 20" aria-hidden="true">${PATHS[n]}</svg>`;
+
+/* ---------- Data ---------- */
+const A = 'ARCDATA PRAHA, s.r.o.';
+const DPP = 'Dopravní podnik hl. m. Prahy, akciová společnost';
+const VUMOP = 'Výzkumný ústav monitoringu a ochrany půdy, v.v.i.';
+const CGS = 'Česká geologická služba';
+const FSV = 'ČVUT v Praze, Fakulta stavební';
+const t = s => { const [h, m] = s.split(':').map(Number); return h * 60 + m; };
+const P = (...a) => a.map(x => { const [n, o] = x.split('|'); return { n: n.trim(), o: (o || '').trim() }; });
+
+const TRACKS = [
+  { id:'spol',   name:'Společenský sál' },
+  { id:'jiz',    name:'Jižní sál' },
+  { id:'ter',    name:'Terasa 2A' },
+  { id:'mini',   name:'Minisemináře', hint:'místo neuvedeno' },
+  { id:'stanek', name:'Stánek konzultačních služeb', hint:'konzultace s odborníky' }
+];
+const DAYS = [
+  { id:'st', label:'Středa',  date:'4. 11.', iso:'2026-11-04', d:4, start:t('9:45'), end:t('19:30') },
+  { id:'ct', label:'Čtvrtek', date:'5. 11.', iso:'2026-11-05', d:5, start:t('9:15'), end:t('15:30') }
+];
+
+const mini  = (day, s, e, title, sp) => [day, 'mini', s, e, 'Miniseminář', 'mini', [[title, sp]]];
+const booth = (day, s, e, title, names) => [day, 'stanek', s, e, 'Stánek konzultačních služeb', 'booth', [[title, P(...names.map(n => n + '|' + A))]]];
+
+const RAW = [
+  /* ===== STŘEDA 4. 11. ===== */
+  ['st','spol','10:00','12:30','Zahájení konference a hlavní řečníci','keynote',[
+    ['Zahájení konference', P('Petr Seidl a hosté|'+A)],
+    ['Hlavní řečník: Jiří Čtyroký', P('Jiří Čtyroký|Institut plánování a rozvoje hl. m. Prahy')],
+    ['Hlavní řečník: Petr Sýkora', P('Petr Sýkora|Pražské vodovody a kanalizace, a.s.')],
+    ['Hlavní řečník: Jan Daňhelka', P('Jan Daňhelka|Český hydrometeorologický ústav')]
+  ]],
+  ['st','spol','14:00','16:30','Technologie, novinky, aktuality','talk',[
+    ['Přednáška hosta z Esri', P('Arkadiusz Szadkowski|Esri')],
+    ['Novinky v ArcGIS', P('Odborníci ARCDATA PRAHA a hosté|'+A)]
+  ]],
+  ['st','spol','17:00','18:40','Veřejná správa','talk',[
+    ['Nový územní plán Prahy – využití GIS a AI', P('Filip Foglar|Hlavní město Praha, odbor územního rozvoje')],
+    ['Portál územního plánování obcí Kraje Vysočina', P('Martin Tejkal|Kraj Vysočina','Petr Jirásek|Kraj Vysočina')],
+    ['Digitální transformace plánování: co potřebuje velké město', P('Jaroslav Holler|Útvar koncepce a rozvoje města Plzně, příspěvková organizace')],
+    ['Jednotná platforma GIS v Dopravním podniku hl. m. Prahy: zakázkové řešení nad ArcGIS Enterprise',
+      P('Martin Kamenský|'+DPP,'Tomáš Opravil|'+DPP,'Pavel Zobal|'+DPP,'Adam Brassány|'+DPP,'Petr Zatloukal|'+DPP)],
+    ['Využití Esri technologie v rámci IS DTM ŘSD', P('Martina Poláková|Ředitelství silnic a dálnic s. p.','Hana Karešová|VARS BRNO a.s.')]
+  ]],
+  ['st','jiz','17:00','18:40','Správa infrastruktury','talk',[
+    ['GIS v Pražské plynárenské: od modernizace technologií k nové roli v podnikové architektuře',
+      P('Alena Vydláková|Pražská plynárenská, a.s.','Libor Hladiš|Pražská plynárenská, a.s.','Michal Huml|Pražská plynárenská, a.s.')],
+    ['Vodárenská síť jako živý systém', P('Michal Hamouz|Unicorn Systems HSI s.r.o.','Jakub Zmítko|Vodovody a kanalizace Pardubice, a.s.')],
+    ['DataCollector – Od sběru dat po dokumentaci stavby', P('Michael Nerad|CETIN a.s.','Lukáš Řeháček|CETIN a.s.','Jan Bartoš|CETIN a.s.')],
+    ['Řešení monitoringu suchovodů a nadzemních hydrantů na platformě ArcGIS v ORLENU',
+      P('Petr Rozsypal|ORLEN Unipetrol RPA s.r.o.','Jan Langr|Unicorn Systems HSI s.r.o.')]
+  ]],
+  ['st','ter','17:00','18:30','Workshopy','workshop',[
+    ['ArcGIS StoryMaps: Víc než jen příběh', P('Lucie Patková|'+A)],
+    ['From Reality Mapping to Digital Twins', P('Arkadiusz Szadkowski|Esri')]
+  ]],
+  ['st','*','18:40','22:00','Společenský večer','social',[['Společenský večer', []]],'Konferenční foyer'],
+
+  mini('st','13:15','13:30','GIS Art', P('Marie Mašková|'+A)),
+  mini('st','13:45','14:00','ArcGIS Data Pipelines – ETL pro webový GIS', P('Matej Vrtich|'+A)),
+  mini('st','16:45','17:00','Survey123 pod lupou: tipy, triky a novinky', P('Kristýna Štěpánová|'+A)),
+  mini('st','17:15','17:30','ArcGIS Instant Apps', P('Matěj Hrabal|'+A)),
+  mini('st','17:45','18:00','ArcGIS Online: správa obsahu', P('Jakub Fér|'+A)),
+
+  booth('st','13:00','14:00','Svět webových aplikací a vývoje', ['Tereza Tylerová','Jan Šarata','Jakub Šilhavý']),
+  booth('st','14:00','15:00','Možnosti služeb ARCDATA, školení, projektové řízení', ['Vladimír Hudec','Adam Vazač','Jan Borovanský','David Černický']),
+  booth('st','15:00','16:00','Správa dat, geodatabáze, ArcGIS Utility Network', ['Marek Ošlejšek','Václav Žák','Martin Král']),
+  booth('st','16:00','17:00','Svět desktopových aplikací a vývoje', ['Marcel Šíp','Marek Hofmann','Dominik Mazur']),
+  booth('st','17:00','18:00','Svět mobilních aplikací a vývoje', ['Vladimír Holubec','Zdeněk Jankovský']),
+
+  /* ===== ČTVRTEK 5. 11. ===== */
+  ['ct','spol','9:30','10:50','Veřejná správa','talk',[
+    ['Památky v mapách: Jak NPÚ zpřístupňuje kulturní dědictví pomocí GIS', P('Karel Sklenář|Národní památkový ústav','Martin Porteš|VARS BRNO a.s.')],
+    ['Jedna platforma, mnoho agend: GIS řešení pro město Plzeň v ArcGIS Enterprise', P('Jiří Beránek|GEOREAL spol. s r.o.','Stanislav Štangl|Správa informačních technologií města Plzně')],
+    ['Skryté mapy úřadu: Data, která pomáhají řídit kraj', P('Jan Harbula|Olomoucký kraj')],
+    ['Drony usnadňují práci!?!', P('Marek Drozdek|Statutární město Opava')]
+  ]],
+  ['ct','jiz','9:30','10:50','Správa infrastruktury','talk',[
+    ['Automatizace nasazování a konfigurace ArcGIS', P('Antonín Procházka|CETIN a. s.','Martin Hofrajtr|CETIN a. s.')],
+    ['Využití GIS pro koordinaci investičních záměrů ČEPS v územním plánování', P('Vojtěch Mazura|ČEPS, a.s.','Josef Chrást|ČEPS, a.s.')],
+    ['CS RequestPortal a ArcGIS – vyjadřovací činnost jednoduše, rychle a intuitivně', P('Tomáš Kroupa|Controlis Solutions, s.r.o.','Lubomír Lazar|Controlis Solutions, s.r.o.')],
+    ['Našeptávač místních názvů pomocí ArcGIS lokátorů', P('David Ondřich|CENDIS, s.p.','Jana Černá|CENDIS, s.p.')]
+  ]],
+  ['ct','ter','9:30','10:50','Životní prostředí','talk',[
+    ['GIS modelování větrné eroze v České republice: od půdních dat k rozhodovací podpoře ochrany krajiny',
+      P('Josef Kučera|'+VUMOP,'Martin Blecha|Státní pozemkový úřad','Petr Karásek|'+VUMOP)],
+    ['ČGS v Etiopii: od geologického mapování k moderní geovědní infrastruktuře',
+      P('Kryštof Verner|'+CGS+'; Univerzita Karlova, Přírodovědecká fakulta','Petra Hejtmánková|'+CGS,'Otmar Petyniak|'+CGS,'Karel Martínek|Univerzita Karlova, Přírodovědecká fakulta')],
+    ['Vymezení urbanizovaných území v prostředí GIS a hodnocení jejich ohroženosti pluviálními povodněmi',
+      P('Petr Kavka|'+FSV,'Luděk Strouhal|'+FSV+'; Výzkumný ústav vodohospodářský T. G. Masaryka','Jan Devátý|'+FSV)],
+    ['Jak prezentovat data o životním prostředí ve veřejné správě',
+      P('Radim Ilčík|Jihomoravská agentura pro veřejné inovace JINAG','Nikola Koktavá|JINAG; VŠB – Technická univerzita Ostrava')]
+  ]],
+  ['ct','spol','11:20','12:40','Workshop','workshop',[
+    ['Správa rastrových dat v prostředí ArcGIS aneb „Co s těmi rastry?“', P('Inka Tesařová|'+A,'Matej Vrtich|'+A)]
+  ]],
+  ['ct','jiz','11:20','12:40','Uživatelské přednášky','talk',[
+    ['Skenování ze vzduchu i země… a co s daty?', P('Jakub Vynikal|3GON Positioning s.r.o.')],
+    ['Zeměměřický úřad: Aktuální stav tvorby výškopisu ZABAGED', P('Jindřich Horák|Zeměměřický úřad')],
+    ['Koncepce zeleně města Ostravy', P('Josef Tračík|Městský ateliér prostorového plánování a architektury, p. o.')],
+    ['GIS a Science On a Sphere ve vzdělávací praxi', P('Tomáš Vencl|Vzdělávací centrum SFÉRA Pardubice','Oldřich Koubek|Vzdělávací centrum SFÉRA Pardubice')]
+  ]],
+  ['ct','ter','11:20','12:40','Uživatelské přednášky','talk',[
+    ['IX. generace mapování brněnského maloobchodu', P('Jan Ambrož|Kancelář architekta města Brna, p. o.')],
+    ['Multikriteriální GIS analýza rozvojového potenciálu Brněnské metropolitní oblasti',
+      P('Jaroslav Burian|Urban Planner s.r.o.','Stanislav Šťastný|Urban Planner s.r.o.','Matouš Čanda|Magistrát města Brna','Zdeněk Dvořák|Magistrát města Brna','Petr Šašinka|Magistrát města Brna')],
+    ['Obohacení městského 3D modelu pomocí deep learningu', P('Barbora Plačková|Statutární město Brno')],
+    ['Zapojenie AI do generovania územno-plánovacích informácií',
+      P('Filip Polonský|Inštitút priestorového plánovania, Bratislava','Ľubomír Macák|Inštitút priestorového plánovania, Bratislava','Martin Baloga|EnviArch, Poprad')]
+  ]],
+  ['ct','spol','13:20','14:45','Workshop','workshop',[
+    ['Tipy a triky v ArcGIS 2026', P('Marie Mašková|'+A,'Václav Žák|'+A)]
+  ]],
+  ['ct','jiz','13:20','14:45','Workshopy','workshop',[
+    ['Prvky umělé inteligence v ArcGIS', P('Vladimír Holubec|'+A,'Matej Vrtich|'+A)],
+    ['Řízení úkolů v ArcGIS Field Maps', P('Radek Kuttelwascher|'+A)]
+  ]],
+  ['ct','spol','14:45','15:10','Závěr konference','closing',[['Závěr konference', []]]],
+
+  mini('ct','11:00','11:15','DTM Connect', P('Lucie Patková|'+A,'Dominik Mazur|'+A)),
+  mini('ct','11:30','11:45','ArcGIS Earth', P('Vladimír Holubec|'+A)),
+  mini('ct','12:00','12:15','GeoParquet v ArcGIS', P('David Novák|'+A)),
+  mini('ct','12:45','13:00','ArcGIS Living Atlas', P('Lucie Patková|'+A)),
+  mini('ct','13:05','13:20','Smart mapping', P('Tereza Černohousová|'+A)),
+
+  booth('ct','9:30','10:30','Inovační technologie (AI v ArcGIS, cloud, Kubernetes apod.)', ['Matej Vrtich','Jakub Šilhavý','Vladimír Holubec']),
+  booth('ct','11:00','12:00','ArcGIS Enterprise a jeho rozšiřování, zabezpečení a optimalizace', ['Zdeněk Jankovský','David Novák','Jan Šarata']),
+  booth('ct','12:00','13:00','Svět webových aplikací a vývoje', ['Jan Šarata','Marek Hofmann','Marcel Šíp']),
+  booth('ct','13:00','14:00','Skriptování (Python API, Notebooks, Arcade)', ['Zdeněk Jankovský','Vladimír Zenkl','David Černický']),
+  booth('ct','14:00','15:00','Rastrová data, 3D', ['Lucie Patková','Jakub Šilhavý','Tereza Černohousová','Inka Tesařová'])
+];
+
+const norm = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+const trackIdx = id => id === '*' ? -1 : TRACKS.findIndex(x => x.id === id);
+const SESSIONS = [], ITEMS = [], BYID = {};
+RAW.forEach((r, si) => {
+  const [day, track, st, en, name, kind, items, loc] = r;
+  const s = { id:'s' + si, day, track, start:t(st), end:t(en), name, kind, loc:loc || '', items:[] };
+  const n = items.length, dur = (s.end - s.start) / n;
+  items.forEach(([title, sp], ii) => {
+    const it = { id:`${day}-${si}-${ii}`, day, track, sess:s, title, sp, kind,
+      start:s.start + ii * dur, end:s.start + (ii + 1) * dur, est:n > 1 };
+    s.items.push(it); ITEMS.push(it); BYID[it.id] = it;
+  });
+  SESSIONS.push(s);
+});
+const locName = it => it.track === '*' ? it.sess.loc : TRACKS[trackIdx(it.track)].name;
+const cvar = it => it.track === '*' ? 'var(--c-social)' : `var(--c-${it.track})`;
+ITEMS.forEach(it => { it.hay = norm([it.title, it.sess.name, locName(it), ...it.sp.map(p => p.n + ' ' + p.o)].join(' ')); });
+
+/* ---------- Pomocné ---------- */
+const fmt = m => { m = Math.round(m); return `${Math.floor(m / 60)}:${String(m % 60).padStart(2, '0')}`; };
+const range = it => (it.est ? '~' : '') + fmt(it.start) + '–' + fmt(it.end);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+const overlap = (a, b) => a !== b && a.day === b.day && a.start < b.end - 0.01 && b.start < a.end - 0.01;
+const pl = (n, one, few, many) => n === 1 ? one : (n >= 2 && n <= 4 ? few : many);
+const qTokens = () => norm(state.q).split(/\s+/).filter(Boolean);
+const matchQ = (it, toks) => toks.every(tk => it.hay.includes(tk));
+const nowInfo = () => { const n = new Date();
+  return { iso:`${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, '0')}-${String(n.getDate()).padStart(2, '0')}`,
+           m:n.getHours() * 60 + n.getMinutes() + n.getSeconds() / 60 }; };
+
+/* ---------- Stav ---------- */
+const KEY = 'gis2026-rozvrh-v1';
+const narrow = window.matchMedia('(max-width:760px)').matches;
+const state = { day:0, view:narrow ? 'list' : 'grid', ppm:narrow ? 3.5 : 4, hidden:new Set(), mine:new Set(), onlyMine:false, theme:'system', q:'', focus:null, selected:null };
+try {
+  const s = JSON.parse(localStorage.getItem(KEY) || 'null');
+  if (s) {
+    if (typeof s.day === 'number' && DAYS[s.day]) state.day = s.day;
+    if (s.view === 'grid' || s.view === 'list') state.view = s.view;
+    if (typeof s.ppm === 'number') state.ppm = Math.min(7, Math.max(2, s.ppm));
+    if (Array.isArray(s.hidden)) state.hidden = new Set(s.hidden.filter(id => trackIdx(id) >= 0));
+    if (Array.isArray(s.mine)) state.mine = new Set(s.mine.filter(id => BYID[id]));
+    state.onlyMine = !!s.onlyMine;
+    if (['system', 'light', 'dark'].includes(s.theme)) state.theme = s.theme;
+  }
+} catch (e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify({ day:state.day, view:state.view, ppm:state.ppm,
+  hidden:[...state.hidden], mine:[...state.mine], onlyMine:state.onlyMine, theme:state.theme })); } catch (e) {} };
+{ const n = nowInfo(); const i = DAYS.findIndex(d => d.iso === n.iso); if (i >= 0) state.day = i; }
+
+/* ---------- Elementy ---------- */
+const $ = id => document.getElementById(id);
+const scroller = $('scroller'), flyout = $('flyout'), scrim = $('scrim');
+$('logo').innerHTML = svg('map');
+$('searchIc').outerHTML = svg('search');
+$('exportBtn').innerHTML = svg('download') + '<span>Export .ics</span>';
+$('onlyMine').checked = state.onlyMine;
+
+let toastT;
+function toast(msg) { const el = $('toast'); el.innerHTML = msg; el.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('show'), 3200); }
+
+function applyTheme() {
+  const r = document.documentElement;
+  if (state.theme === 'system') r.removeAttribute('data-theme'); else r.setAttribute('data-theme', state.theme);
+  const b = $('themeBtn');
+  b.innerHTML = svg(state.theme === 'light' ? 'sun' : state.theme === 'dark' ? 'moon' : 'auto');
+  b.title = 'Motiv: ' + ({ system:'podle systému', light:'světlý', dark:'tmavý' })[state.theme];
+}
+
+function conflicts() {
+  const mine = ITEMS.filter(i => state.mine.has(i.id)), out = new Set();
+  for (let i = 0; i < mine.length; i++) for (let j = i + 1; j < mine.length; j++)
+    if (overlap(mine[i], mine[j])) { out.add(mine[i].id); out.add(mine[j].id); }
+  return out;
+}
+
+/* ---------- Render: ovládání ---------- */
+function renderTabs() {
+  const toks = qTokens();
+  $('dayTabs').innerHTML = DAYS.map((d, i) => {
+    const mine = ITEMS.filter(it => it.day === d.id && state.mine.has(it.id)).length;
+    const m = toks.length ? ITEMS.filter(it => it.day === d.id && matchQ(it, toks)).length : null;
+    return `<button role="tab" aria-selected="${i === state.day}" class="${i === state.day ? 'on' : ''}" data-day="${i}">${d.label} <span class="d">${d.date}</span>${m !== null ? `<span class="pill" title="Výsledky hledání">${m}</span>` : ''}${mine ? `<span class="pill star" title="Položky v mém programu">★ ${mine}</span>` : ''}</button>`;
+  }).join('');
+}
+function renderChips() {
+  $('chips').innerHTML = TRACKS.map(tr =>
+    `<button class="chip${state.hidden.has(tr.id) ? ' off' : ''}" data-track="${tr.id}" style="--c:var(--c-${tr.id})" aria-pressed="${!state.hidden.has(tr.id)}"><span class="dot"></span>${tr.name}</button>`
+  ).join('') + '<span class="hint">Kliknutím skryješ / zobrazíš sloupec</span>';
+}
+function renderSeg() {
+  $('viewSeg').innerHTML = `<button data-view="grid" class="${state.view === 'grid' ? 'on' : ''}" title="Mřížka podle místností">${svg('grid')}Mřížka</button><button data-view="list" class="${state.view === 'list' ? 'on' : ''}" title="Chronologický seznam">${svg('list')}Seznam</button>`;
+  const dis = state.view !== 'grid' ? ' disabled' : '';
+  $('zoomSeg').innerHTML = `<button data-zoom="-1" title="Zmenšit"${dis}>${svg('minus')}</button><button data-zoom="1" title="Zvětšit"${dis}>${svg('plus')}</button>`;
+}
+function updateBadges() {
+  $('mineBadge').textContent = state.mine.size || '';
+  const c = conflicts().size;
+  $('confBadge').textContent = c ? '⚠ ' + c : '';
+}
+
+/* ---------- Render: mřížka ---------- */
+function cardHTML(it, top, hgt, first) {
+  const inner = hgt - 14, metaH = 15, lh = 16.5;
+  const showMeta = inner >= metaH + lh - 1;
+  let lines, showSp = false;
+  if (!showMeta) lines = 1;
+  else {
+    lines = Math.floor((inner - metaH) / lh);
+    if (lines >= 3 && it.sp.length) { showSp = true; lines = Math.min(lines - 1, 5); }
+    else lines = Math.max(1, Math.min(lines, 6));
+  }
+  const s = it.sess;
+  let label = '';
+  if (first) label = s.kind === 'mini' ? 'Miniseminář' : s.kind === 'booth' ? 'Konzultace' : s.name;
+  const names = it.sp.map(p => p.n).join(', ');
+  return `<button class="talk card${!showMeta ? ' tiny' : ''}" data-id="${it.id}" style="top:${top + 1}px;height:${hgt - 2}px" title="${esc(range(it) + ' · ' + it.title + (names ? ' — ' + names : ''))}">`
+    + (showMeta ? `<span class="meta">${range(it)}${label ? ` · <b>${esc(label)}</b>` : ''}</span>` : '')
+    + `<span class="ttl" style="-webkit-line-clamp:${lines}">${esc(it.title)}</span>`
+    + (showSp ? `<span class="sp">${esc(names)}</span>` : '')
+    + `<span class="star-ind">${svg('star', true)}</span></button>`;
+}
+function renderGrid() {
+  const day = DAYS[state.day], ppm = state.ppm;
+  const tracks = TRACKS.filter(tr => !state.hidden.has(tr.id));
+  const H = (day.end - day.start) * ppm, y = m => (m - day.start) * ppm;
+  const hoff = ((60 - day.start % 60) % 60) * ppm, qoff = ((15 - day.start % 15) % 15) * ppm;
+  let h = `<div class="sched" style="--cols:${tracks.length};--ppm:${ppm}px;--hoff:${hoff}px;--qoff:${qoff}px">`;
+  h += '<div class="sched-head"><div class="corner"></div>' + tracks.map(tr =>
+    `<div class="th" style="--c:var(--c-${tr.id})"><span class="dot"></span><div style="min-width:0"><b>${tr.name}</b>${tr.hint ? `<small>${tr.hint}</small>` : ''}</div></div>`).join('') + '</div>';
+  h += `<div class="sched-body" style="height:${H}px"><div class="under"><div class="band" id="band"></div></div><div class="axis">`;
+  for (let m = Math.ceil(day.start / 30) * 30; m < day.end; m += 30)
+    h += `<span class="tick${m % 60 ? ' half' : ''}" style="top:${y(m)}px">${fmt(m)}</span>`;
+  h += '</div>';
+  for (const tr of tracks) {
+    h += `<div class="col" data-track="${tr.id}" style="--c:var(--c-${tr.id})">`;
+    for (const s of SESSIONS.filter(s => s.day === day.id && s.track === tr.id)) {
+      h += `<div class="sess" style="top:${y(s.start)}px;height:${(s.end - s.start) * ppm}px">`;
+      s.items.forEach((it, i) => { h += cardHTML(it, (it.start - s.start) * ppm, (it.end - it.start) * ppm, i === 0); });
+      h += '</div>';
+    }
+    h += '</div>';
+  }
+  h += '<div class="overlay"><div class="nowline" id="nowline"><span></span></div>';
+  for (const s of SESSIONS.filter(s => s.day === day.id && s.track === '*')) {
+    const it = s.items[0], endV = Math.min(s.end, day.end);
+    h += `<button class="talk card span-ev" data-id="${it.id}" style="--c:var(--c-social);top:${y(s.start) + 2}px;height:${(endV - s.start) * ppm - 4}px"><b>${esc(s.name)}</b><span>${fmt(s.start)}–${fmt(s.end)} · ${esc(s.loc)}</span>${s.end > day.end ? `<i>pokračuje až do ${fmt(s.end)} ↓</i>` : ''}</button>`;
+  }
+  h += '</div></div></div>';
+  scroller.innerHTML = h;
+}
+
+/* ---------- Render: seznam ---------- */
+function renderList() {
+  const day = DAYS[state.day], n = nowInfo(), today = n.iso === day.iso;
+  const its = ITEMS.filter(i => i.day === day.id && (i.track === '*' || !state.hidden.has(i.track)))
+    .sort((a, b) => a.start - b.start || trackIdx(a.track) - trackIdx(b.track));
+  let h = '<div class="list">', cur = -1;
+  for (const it of its) {
+    const hr = Math.floor(Math.round(it.start) / 60);
+    if (hr !== cur) { if (cur >= 0) h += '</section>'; h += `<section><h3>${hr}:00 – ${hr + 1}:00</h3>`; cur = hr; }
+    const conc = ITEMS.filter(o => overlap(o, it)).length;
+    const live = today && n.m >= it.start && n.m < it.end;
+    h += `<div class="talk row" role="button" tabindex="0" data-id="${it.id}" style="--c:${cvar(it)}">`
+      + `<span class="r-time">${range(it)}</span><span class="r-bar"></span>`
+      + `<span class="r-main"><span class="r-sub">${esc(locName(it))}${['mini', 'booth', 'social', 'closing'].includes(it.kind) ? '' : ' · ' + esc(it.sess.name)}${live ? '<em class="live-chip">Právě probíhá</em>' : ''}</span>`
+      + `<span class="r-ttl">${esc(it.title)}</span>${it.sp.length ? `<span class="r-sp">${esc(it.sp.map(p => p.n).join(', '))}</span>` : ''}</span>`
+      + `<span class="r-side">${conc ? `<span class="conc-chip" title="Kolik dalších položek běží ve stejný čas">${conc} souběžně</span>` : ''}`
+      + `<span class="star-btn" role="button" tabindex="0" data-star="${it.id}" title="Přidat / odebrat z mého programu">${svg('star')}${svg('star', true)}</span></span></div>`;
+  }
+  if (cur >= 0) h += '</section>';
+  h += '<p class="empty">Žádná položka neodpovídá filtru.</p></div>';
+  scroller.innerHTML = h;
+}
+
+/* ---------- Filtry, zvýraznění, teď ---------- */
+function applyFilters() {
+  const toks = qTokens(), conf = conflicts();
+  let cnt = 0;
+  scroller.querySelectorAll('.talk').forEach(el => {
+    const it = BYID[el.dataset.id];
+    const mq = !toks.length || matchQ(it, toks);
+    const ok = mq && (!state.onlyMine || state.mine.has(it.id));
+    el.classList.toggle('filtered', !ok);
+    el.classList.toggle('match', toks.length > 0 && mq);
+    el.classList.toggle('starred', state.mine.has(it.id));
+    el.classList.toggle('conflict', conf.has(it.id));
+    if (toks.length && mq) cnt++;
+  });
+  $('qcount').textContent = toks.length ? `${cnt} ${pl(cnt, 'shoda', 'shody', 'shod')}` : '';
+  renderTabs();
+}
+function applyFocus() {
+  const fid = state.selected || state.focus, fi = fid && BYID[fid];
+  const day = DAYS[state.day];
+  const on = !!fi && fi.day === day.id && state.view === 'grid';
+  scroller.classList.toggle('focusing', on);
+  scroller.querySelectorAll('.talk').forEach(el => {
+    const it = BYID[el.dataset.id];
+    el.classList.toggle('focused', !!fi && it === fi);
+    el.classList.toggle('conc', !!fi && overlap(it, fi));
+  });
+  const band = $('band');
+  if (band && on) { band.style.top = (fi.start - day.start) * state.ppm + 'px'; band.style.height = (fi.end - fi.start) * state.ppm + 'px'; }
+}
+function updateNow() {
+  const nl = $('nowline'); if (!nl) return;
+  const day = DAYS[state.day], n = nowInfo();
+  if (n.iso === day.iso && n.m >= day.start && n.m <= day.end) {
+    nl.style.display = 'block'; nl.style.top = (n.m - day.start) * state.ppm + 'px';
+    nl.firstElementChild.textContent = 'Teď ' + fmt(n.m);
+  } else nl.style.display = 'none';
+}
+function scrollToNow() {
+  const day = DAYS[state.day], n = nowInfo();
+  if (n.iso !== day.iso) return;
+  if (state.view === 'grid') scroller.scrollTop = Math.max(0, (n.m - day.start) * state.ppm - scroller.clientHeight / 3);
+  else { const el = scroller.querySelector('.live-chip'); el && el.closest('.row').scrollIntoView({ block:'center' }); }
+}
+
+function render() {
+  renderChips(); renderSeg();
+  scroller.classList.toggle('grid-mode', state.view === 'grid');
+  if (state.view === 'grid') renderGrid(); else renderList();
+  applyFilters(); applyFocus(); updateNow(); updateBadges();
+  if (state.selected && flyout.classList.contains('open')) renderFly();
+}
+
+/* ---------- Detail (flyout) ---------- */
+function miniRow(o, cur, showLoc) {
+  const st = state.mine.has(o.id);
+  return `<button class="mrow${cur ? ' cur' : ''}" data-goto="${o.id}" style="--c:${cvar(o)}"><span class="dot"></span><span><small>${range(o)}${showLoc ? ' · ' + esc(locName(o)) : ''}</small><span class="mt">${esc(o.title)}</span></span>${st ? svg('star', true) : '<span></span>'}</button>`;
+}
+function renderFly() {
+  const it = BYID[state.selected]; if (!it) return;
+  const s = it.sess, day = DAYS.find(d => d.id === it.day), st = state.mine.has(it.id), conf = conflicts();
+  const conc = ITEMS.filter(o => overlap(o, it)).sort((a, b) => trackIdx(a.track) - trackIdx(b.track) || a.start - b.start);
+  const n = s.items.length;
+  flyout.innerHTML =
+    `<div class="fly-head" style="--c:${cvar(it)}"><span class="dot"></span><span class="fly-loc">${esc(locName(it))}</span><button class="icon-btn" data-close title="Zavřít (Esc)" aria-label="Zavřít">${svg('dismiss')}</button></div>`
+    + `<div class="fly-body" style="--c:${cvar(it)}">`
+    + `<div class="eyebrow">${esc(s.kind === 'mini' ? 'Miniseminář' : s.name)}</div><h2>${esc(it.title)}</h2>`
+    + `<div class="info">${svg('clock')}<div><b>${day.label} ${day.date}</b> · ${range(it)}</div></div>`
+    + `<div class="info">${svg('pin')}<div>${esc(locName(it))}</div></div>`
+    + (it.est ? `<div class="note-box">Čas je dopočítaný: sekce ${fmt(s.start)}–${fmt(s.end)} je rovnoměrně rozdělena mezi ${n} ${pl(n, 'položku', 'položky', 'položek')} (≈ ${Math.round((s.end - s.start) / n)} min). Skutečný začátek se může lišit.</div>` : '')
+    + (conf.has(it.id) ? `<div class="warn-box">${svg('warn')}<span>Překrývá se s jinou položkou v tvém programu.</span></div>` : '')
+    + `<div class="actions"><button class="btn${st ? '' : ' primary'}" data-star-fly>${svg('star', st)}${st ? 'Odebrat z mého programu' : 'Přidat do mého programu'}</button><button class="btn" data-ics title="Stáhnout jako událost do kalendáře">${svg('cal')}Do kalendáře</button></div>`
+    + (it.sp.length ? `<h4>Přednášející</h4><ul class="speakers">${it.sp.map(p => `<li><b>${esc(p.n)}</b>${p.o ? `<span>${esc(p.o)}</span>` : ''}</li>`).join('')}</ul>` : '')
+    + (n > 1 ? `<h4>Program sekce</h4><div class="mlist">${s.items.map(o => miniRow(o, o === it, false)).join('')}</div>` : '')
+    + `<h4>Ve stejný čas probíhá ${conc.length ? `<span class="pill">${conc.length}</span>` : ''}</h4>`
+    + (conc.length ? `<div class="mlist">${conc.map(o => miniRow(o, false, true)).join('')}</div>` : '<p class="muted">V tomto čase neprobíhá nic jiného.</p>')
+    + '</div>';
+}
+function openFly(id, scroll) {
+  state.selected = id; state.focus = id;
+  renderFly();
+  flyout.classList.add('open'); flyout.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('fly-open'); scrim.classList.add('show');
+  applyFocus();
+  if (scroll) {
+    const el = scroller.querySelector(`.talk[data-id="${id}"]`);
+    el && el.scrollIntoView({ block:'nearest', inline:'nearest', behavior:'smooth' });
+  }
+}
+function closeFly() {
+  state.selected = null; state.focus = null;
+  flyout.classList.remove('open'); flyout.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('fly-open'); scrim.classList.remove('show');
+  applyFocus();
+}
+
+function toggleStar(id) {
+  const it = BYID[id];
+  if (state.mine.has(id)) { state.mine.delete(id); toast('Odebráno z mého programu'); }
+  else {
+    state.mine.add(id);
+    const clash = ITEMS.filter(o => state.mine.has(o.id) && overlap(o, it));
+    toast(clash.length ? `⚠ Přidáno, ale překrývá se s: <b>${esc(clash[0].title)}</b>${clash.length > 1 ? ` (+${clash.length - 1})` : ''}` : '★ Přidáno do mého programu');
+  }
+  save(); applyFilters(); updateBadges();
+  if (state.selected) renderFly();
+}
+
+/* ---------- Kalendář (.ics) ---------- */
+function icsDate(d, m) { // listopad = CET (UTC+1)
+  const dt = new Date(Date.UTC(2026, 10, d, 0, 0, 0) + (Math.round(m) - 60) * 60000);
+  return dt.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+}
+const icsEsc = s => String(s).replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
+const fold = l => { const out = []; while (l.length > 70) { out.push(l.slice(0, 70)); l = ' ' + l.slice(70); } out.push(l); return out.join('\r\n'); };
+function buildICS(items) {
+  const stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+  const L = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Rozvrh konference GIS 2026//CS', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH'];
+  for (const it of items) {
+    const d = DAYS.find(x => x.id === it.day).d;
+    const desc = [it.sess.name, ...it.sp.map(p => p.n + (p.o ? ' (' + p.o + ')' : '')), it.est ? 'Čas je odhad (rovnoměrné rozdělení sekce).' : ''].filter(Boolean).join('\n');
+    L.push('BEGIN:VEVENT', 'UID:' + it.id + '@konference-gis-2026', 'DTSTAMP:' + stamp,
+      'DTSTART:' + icsDate(d, it.start), 'DTEND:' + icsDate(d, it.end),
+      fold('SUMMARY:' + icsEsc(it.title)), fold('LOCATION:' + icsEsc(locName(it) + ', Konference GIS Esri v ČR')),
+      fold('DESCRIPTION:' + icsEsc(desc)), 'END:VEVENT');
+  }
+  L.push('END:VCALENDAR');
+  return L.join('\r\n');
+}
+function download(name, text) {
+  const url = URL.createObjectURL(new Blob([text], { type:'text/calendar;charset=utf-8' }));
+  const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+
+/* ---------- Události ---------- */
+scroller.addEventListener('mouseover', e => {
+  if (state.selected || state.view !== 'grid') return;
+  const el = e.target.closest('.talk');
+  const id = el ? el.dataset.id : null;
+  if (id !== state.focus) { state.focus = id; applyFocus(); }
+});
+scroller.addEventListener('mouseleave', () => { if (!state.selected && state.focus) { state.focus = null; applyFocus(); } });
+scroller.addEventListener('focusin', e => {
+  const el = e.target.closest('.talk');
+  if (el && !state.selected && state.view === 'grid') { state.focus = el.dataset.id; applyFocus(); }
+});
+scroller.addEventListener('click', e => {
+  const star = e.target.closest('[data-star]');
+  if (star) { e.stopPropagation(); toggleStar(star.dataset.star); return; }
+  const el = e.target.closest('.talk');
+  if (el) { if (state.selected === el.dataset.id) closeFly(); else openFly(el.dataset.id); }
+  else if (state.selected) closeFly();
+});
+scroller.addEventListener('dblclick', e => { const el = e.target.closest('.card'); if (el) toggleStar(el.dataset.id); });
+scroller.addEventListener('keydown', e => {
+  if (e.key !== 'Enter' && e.key !== ' ') return;
+  const star = e.target.closest('[data-star]');
+  if (star) { e.preventDefault(); toggleStar(star.dataset.star); return; }
+  const row = e.target.closest('.row');
+  if (row) { e.preventDefault(); openFly(row.dataset.id); }
+});
+
+flyout.addEventListener('click', e => {
+  if (e.target.closest('[data-close]')) return closeFly();
+  if (e.target.closest('[data-star-fly]')) return toggleStar(state.selected);
+  if (e.target.closest('[data-ics]')) { const it = BYID[state.selected]; download('gis2026-' + it.id + '.ics', buildICS([it])); return; }
+  const g = e.target.closest('[data-goto]');
+  if (g) { openFly(g.dataset.goto, true); flyout.querySelector('.fly-body').scrollTop = 0; }
+});
+scrim.addEventListener('click', closeFly);
+
+$('dayTabs').addEventListener('click', e => {
+  const b = e.target.closest('[data-day]'); if (!b) return;
+  const i = +b.dataset.day; if (i === state.day) return;
+  state.day = i; save();
+  if (state.selected && BYID[state.selected].day !== DAYS[i].id) closeFly();
+  render(); scroller.scrollTop = 0; scrollToNow();
+});
+$('chips').addEventListener('click', e => {
+  const c = e.target.closest('[data-track]'); if (!c) return;
+  const id = c.dataset.track;
+  if (state.hidden.has(id)) state.hidden.delete(id);
+  else { if (TRACKS.length - state.hidden.size <= 1) { toast('Alespoň jeden sloupec musí zůstat zobrazený.'); return; } state.hidden.add(id); }
+  save(); render();
+});
+$('viewSeg').addEventListener('click', e => {
+  const b = e.target.closest('[data-view]'); if (!b || b.dataset.view === state.view) return;
+  state.view = b.dataset.view; save(); render(); scroller.scrollTop = 0; scrollToNow();
+});
+$('zoomSeg').addEventListener('click', e => {
+  const b = e.target.closest('[data-zoom]'); if (!b || state.view !== 'grid') return;
+  const np = Math.min(7, Math.max(2, state.ppm + (+b.dataset.zoom) * 0.5));
+  if (np === state.ppm) return;
+  const ratio = (scroller.scrollTop + scroller.clientHeight / 2) / scroller.scrollHeight;
+  state.ppm = np; save(); render();
+  scroller.scrollTop = ratio * scroller.scrollHeight - scroller.clientHeight / 2;
+});
+$('onlyMine').addEventListener('change', e => {
+  state.onlyMine = e.target.checked; save(); applyFilters();
+  if (state.onlyMine && !state.mine.size) toast('Zatím nemáš nic označeno. Otevři položku a klikni na ★ (nebo na ni dvakrát klikni).');
+});
+$('exportBtn').addEventListener('click', () => {
+  const items = ITEMS.filter(i => state.mine.has(i.id)).sort((a, b) => a.day.localeCompare(b.day) * -1 || a.start - b.start);
+  if (!items.length) { toast('Nejdřív si ★ označ položky do svého programu.'); return; }
+  download('muj-program-gis-2026.ics', buildICS(items));
+  toast(`Staženo ${items.length} ${pl(items.length, 'událost', 'události', 'událostí')} do kalendáře`);
+});
+$('q').addEventListener('input', e => { state.q = e.target.value; applyFilters(); });
+$('themeBtn').addEventListener('click', () => {
+  state.theme = ({ system:'light', light:'dark', dark:'system' })[state.theme]; save(); applyTheme();
+});
+document.addEventListener('keydown', e => {
+  const typing = /INPUT|TEXTAREA/.test(document.activeElement.tagName);
+  if (e.key === '/' && !typing) { e.preventDefault(); $('q').focus(); }
+  else if (e.key === 'Escape') {
+    if (state.selected) closeFly();
+    else if (state.q) { state.q = ''; $('q').value = ''; applyFilters(); }
+    else if (typing) document.activeElement.blur();
+  }
+});
+
+applyTheme();
+render();
+scrollToNow();
+setInterval(updateNow, 30000);
+})();
+</script>
+</body>
+</html>
