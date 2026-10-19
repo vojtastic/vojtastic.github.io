@@ -79,21 +79,44 @@ button{font:inherit;color:inherit}
 .ic.fill{fill:currentColor;stroke:none}
 
 /* App bar */
-.appbar{display:flex;align-items:center;gap:16px;padding:12px 20px;background:var(--acrylic);
-  -webkit-backdrop-filter:blur(30px) saturate(1.5);backdrop-filter:blur(30px) saturate(1.5);border-bottom:1px solid var(--stroke);flex:none}
-.brand{display:flex;align-items:center;gap:12px;min-width:0}
-.logo{width:38px;height:38px;border-radius:9px;display:grid;place-items:center;flex:none;color:#fff;
-  background:linear-gradient(135deg,#0f6cbd 0%,#5b5fc7 55%,#8764b8 100%);box-shadow:var(--sh4)}
-.logo .ic{width:22px;height:22px;stroke-width:1.6}
-.brand h1{font-family:var(--font-d);font-size:18px;line-height:24px;font-weight:600;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.brand p{margin:0;font-size:12px;color:var(--fg3)}
-.search{margin-left:auto;position:relative;width:min(400px,40vw);display:flex;align-items:center}
-.search .ic{position:absolute;left:10px;color:var(--fg3);pointer-events:none}
-.search input{width:100%;height:32px;padding:0 70px 0 34px;border:1px solid var(--stroke);border-bottom-color:var(--fg4);
-  border-radius:4px;background:var(--surface);color:var(--fg);font:inherit;font-size:13.5px;outline:none}
-.search input:focus{border-bottom:2px solid var(--brand);padding-bottom:0}
+/* Horní panel – leží přímo na pozadí stránky (bez vlastního pruhu), stejné materiály jako ovládací prvky níže */
+.appbar{display:flex;align-items:center;gap:20px;padding:18px 20px 8px;flex:none}
+.titlebox{min-width:0}
+.titlebox h1{font-family:var(--font-d);font-size:24px;line-height:30px;font-weight:600;letter-spacing:-.012em;margin:0;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta-row{display:flex;align-items:center;flex-wrap:wrap;gap:6px 12px;margin-top:5px;font-size:13px;color:var(--fg3)}
+.meta-row .mi{display:inline-flex;align-items:center;gap:6px}
+.status-pill{display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 9px;border-radius:999px;font-size:12px;font-weight:600;
+  background:var(--brand-tint);color:var(--brand)}
+.status-pill:empty{display:none}
+.status-pill.live{background:var(--danger-tint);color:var(--danger)}
+.status-pill.live::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;animation:pulse 1.6s ease-in-out infinite}
+.status-pill.past{background:var(--subtle-h);color:var(--fg3)}
+@keyframes pulse{50%{opacity:.35}}
+.app-actions{margin-left:auto;display:flex;align-items:center;gap:10px;flex:none}
+.search{position:relative;width:min(420px,36vw);display:flex;align-items:center}
+.search > .ic{position:absolute;left:11px;color:var(--fg3);pointer-events:none}
+.search input{width:100%;height:36px;padding:0 44px 0 36px;border:1px solid var(--stroke);border-radius:6px;background:var(--surface);
+  color:var(--fg);font:inherit;font-size:14px;outline:none;box-shadow:var(--sh2);
+  transition:border-color var(--fade) var(--ease),box-shadow var(--fade) var(--ease)}
+.search input::placeholder{color:var(--fg4)}
+.search input:hover{border-color:var(--stroke-s)}
+.search input:focus{border-color:var(--stroke-s);box-shadow:inset 0 -2px 0 var(--brand),var(--sh4)}
 .search input::-webkit-search-cancel-button{display:none}
-#qcount{position:absolute;right:10px;font-size:11.5px;color:var(--fg3);pointer-events:none}
+.search.has-q input{padding-right:112px}
+.search .tail{position:absolute;right:6px;display:flex;align-items:center;gap:2px}
+.search kbd{font:600 11px/1 var(--font);color:var(--fg3);border:1px solid var(--stroke-s);border-bottom-width:2px;border-radius:4px;padding:3px 6px;background:var(--layer)}
+.search input:focus ~ .tail kbd,.search.has-q kbd{display:none}
+#qcount{font-size:12px;color:var(--fg3);margin-right:2px;white-space:nowrap}
+#qclear{display:none;width:26px;height:26px;border:0;border-radius:4px;background:transparent;color:var(--fg3);cursor:pointer;place-items:center}
+#qclear .ic{width:14px;height:14px}
+#qclear:hover{background:var(--subtle-h);color:var(--fg)}
+.search.has-q #qclear{display:grid}
+/* Přepínač motivu – jedno tlačítko, ikona ukazuje aktuální stav; stejný materiál a výška jako pole hledání */
+.theme-btn{width:36px;height:36px;flex:none;border:1px solid var(--stroke);border-radius:6px;background:var(--surface);box-shadow:var(--sh2);
+  color:var(--fg2);display:grid;place-items:center;cursor:pointer;transition:background-color var(--fade) var(--ease),border-color var(--fade) var(--ease)}
+.theme-btn:hover{background:var(--surface-h);border-color:var(--stroke-s);color:var(--fg)}
+.theme-btn .ic{width:18px;height:18px}
 .icon-btn{width:32px;height:32px;border-radius:4px;border:0;background:transparent;display:grid;place-items:center;cursor:pointer;color:var(--fg2);flex:none}
 .icon-btn:hover{background:var(--subtle-h)}
 
@@ -143,7 +166,7 @@ button{font:inherit;color:inherit}
 .chips .hint{font-size:12px;color:var(--fg4);margin-left:4px}
 
 /* Main */
-main{flex:1;min-height:0;padding:0 20px;transition:padding-right .28s cubic-bezier(.1,.9,.2,1)}
+main{flex:1;min-height:0;padding:0 20px}
 .scroller{height:100%;overflow:auto;background:var(--layer);border:1px solid var(--stroke);border-radius:8px;box-shadow:var(--sh4);position:relative;overscroll-behavior:contain}
 
 /* Grid */
@@ -168,24 +191,32 @@ main{flex:1;min-height:0;padding:0 20px;transition:padding-right .28s cubic-bezi
 .under,.overlay{position:absolute;top:0;bottom:0;left:var(--axisw);right:0;pointer-events:none}
 .under{z-index:0}
 .overlay{z-index:5}
-.band{position:absolute;left:0;right:0;display:none;background:color-mix(in srgb,var(--brand) 9%,transparent);
+/* ZVÝRAZNĚNÍ – jedna animace pro všechny prvky (pás, obrys, stín, ztlumení, podbarvení sekce):
+   stejná délka i průběh TAM i ZPĚT. Přechody jsou definované jen na výchozím stavu, žádný stav je nepřepisuje. */
+:root{--fade:.1s;--ease:ease-out}
+.band{position:absolute;left:0;right:0;opacity:0;transition:opacity var(--fade) var(--ease);background:color-mix(in srgb,var(--brand) 9%,transparent);
   border-top:1px dashed color-mix(in srgb,var(--brand) 55%,transparent);border-bottom:1px dashed color-mix(in srgb,var(--brand) 55%,transparent)}
-.focusing .band{display:block}
+.focusing .band{opacity:1}
 .nowline{position:absolute;left:0;right:0;height:2px;background:var(--danger);display:none}
 .nowline::before{content:"";position:absolute;left:-5px;top:-4px;width:10px;height:10px;border-radius:50%;background:var(--danger)}
 .nowline span{position:absolute;left:10px;top:-20px;font-size:11px;font-weight:600;color:#fff;background:var(--danger);padding:1px 7px;border-radius:999px}
 
-.sess{position:absolute;left:4px;right:4px;border-radius:8px;background:color-mix(in srgb,var(--c) var(--tint),transparent);transition:opacity .15s}
+/* --gap = stejný odstup karty od okraje slotu ve všech směrech (vodorovně i svisle) */
+.sched{--gap:3px}
+/* Podbarvení sekce jen u zvýrazněné položky (třída .hl nastavovaná spolu s ostatním zvýrazněním) */
+.sess{position:absolute;left:0;right:0;border-radius:7px;background:transparent;transition:opacity var(--fade) var(--ease),background-color var(--fade) var(--ease)}
+.sess.hl{background:color-mix(in srgb,var(--c) var(--tint),transparent)}
 .sess:not(:has(.card:not(.filtered))){opacity:.35}
-.card{position:absolute;left:3px;right:3px;display:flex;flex-direction:column;text-align:left;padding:5px 8px 5px 11px;
-  border-radius:6px;border:1px solid var(--stroke);background:var(--surface);overflow:hidden;cursor:pointer;
-  box-shadow:inset 3px 0 0 var(--c),var(--sh2);transition:box-shadow .12s,opacity .15s,background .12s}
+.card{position:absolute;left:var(--gap);right:var(--gap);display:flex;flex-direction:column;text-align:left;padding:6px 8px 6px 11px;
+  border-radius:5px;border:1px solid var(--stroke);background:var(--surface);overflow:hidden;cursor:pointer;
+  box-shadow:inset 3px 0 0 var(--c),var(--sh2);transition:box-shadow var(--fade) var(--ease),opacity var(--fade) var(--ease),background-color var(--fade) var(--ease)}
 .card:hover{background:var(--surface-h);box-shadow:inset 3px 0 0 var(--c),var(--sh8);z-index:2}
 .card:focus-visible{outline-offset:-2px}
 .card.tiny{padding-top:2px;padding-bottom:2px;justify-content:center}
 .card .meta{font-size:11px;line-height:15px;color:var(--fg3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums;flex:none}
 .card .meta b{color:var(--c);font-weight:600}
-.card .ttl{font-size:12.5px;line-height:16.5px;font-weight:600;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;flex:none}
+/* Název přednášky: lehčí řez (550 u proměnných písem Segoe UI Variable / SF, jinak nejbližší) a o kousek větší písmo */
+.card .ttl{font-size:13px;line-height:17px;font-weight:550;letter-spacing:.005em;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;flex:none}
 .card .sp{font-size:11.5px;line-height:15px;color:var(--fg3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:none}
 .star-ind{position:absolute;top:4px;right:5px;color:var(--gold);display:none}
 .star-ind .ic{width:13px;height:13px}
@@ -199,7 +230,11 @@ main{flex:1;min-height:0;padding:0 20px;transition:padding-right .28s cubic-bezi
 .grid-mode.focusing .card.conc{box-shadow:inset 3px 0 0 var(--c),var(--sh8)}
 .card.focused{box-shadow:inset 3px 0 0 var(--c),0 0 0 2px var(--brand),var(--sh8);z-index:3}
 
-.card.span-ev{left:4px;right:4px;flex-direction:row;align-items:center;justify-content:center;gap:12px;pointer-events:auto;
+.card.span-ev.conflict{box-shadow:0 0 0 1px var(--danger)}
+.card.span-ev .star-ind{top:8px;right:10px}
+.card.span-ev:not(.conflict) .star-ind{color:var(--gold)}
+.card.span-ev .star-ind .ic{width:16px;height:16px}
+.card.span-ev{flex-direction:row;align-items:center;justify-content:center;gap:12px;pointer-events:auto;
   border:1px dashed var(--c);box-shadow:none;text-align:center;flex-wrap:wrap;
   background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--c) 16%,var(--layer)) 0 12px,color-mix(in srgb,var(--c) 8%,var(--layer)) 12px 24px)}
 .card.span-ev:hover{box-shadow:var(--sh8)}
@@ -212,7 +247,7 @@ main{flex:1;min-height:0;padding:0 20px;transition:padding-right .28s cubic-bezi
 .list section:not(:has(.row:not(.filtered))){display:none}
 .list h3{position:sticky;top:0;z-index:2;margin:0;padding:14px 4px 6px;font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--fg3);background:var(--layer)}
 .row{display:grid;grid-template-columns:118px 4px minmax(0,1fr) auto;gap:12px;align-items:start;padding:10px 12px;margin:0 0 6px;
-  border:1px solid var(--stroke);border-radius:6px;background:var(--surface);box-shadow:var(--sh2);cursor:pointer;transition:background .12s,box-shadow .12s}
+  border:1px solid var(--stroke);border-radius:6px;background:var(--surface);box-shadow:var(--sh2);cursor:pointer;transition:background-color var(--fade) var(--ease),box-shadow var(--fade) var(--ease)}
 .row:hover{background:var(--surface-h);box-shadow:var(--sh8)}
 .row.filtered{display:none}
 .row.match{background:color-mix(in srgb,var(--gold) 14%,var(--surface))}
@@ -236,11 +271,12 @@ main{flex:1;min-height:0;padding:0 20px;transition:padding-right .28s cubic-bezi
 .list:not(:has(.row:not(.filtered))) .empty{display:block}
 
 /* Flyout */
-.flyout{position:fixed;top:8px;right:8px;bottom:8px;width:min(400px,calc(100vw - 16px));z-index:50;display:flex;flex-direction:column;overflow:hidden;
+.flyout{position:fixed;top:0;right:0;bottom:0;width:min(400px,100vw);z-index:50;display:flex;flex-direction:column;overflow:hidden;
   background:var(--acrylic);-webkit-backdrop-filter:blur(40px) saturate(1.6);backdrop-filter:blur(40px) saturate(1.6);
-  border:1px solid var(--stroke);border-radius:12px;box-shadow:var(--sh28);
-  transform:translateX(calc(100% + 24px));transition:transform .28s cubic-bezier(.1,.9,.2,1);visibility:hidden}
-.flyout.open{transform:none;visibility:visible}
+  border-left:1px solid var(--stroke);box-shadow:var(--sh28);
+  transform:translateX(calc(100% + 32px));visibility:hidden;
+  transition:transform .28s cubic-bezier(.1,.9,.2,1),visibility 0s linear .28s}
+.flyout.open{transform:none;visibility:visible;transition:transform .28s cubic-bezier(.1,.9,.2,1),visibility 0s}
 .fly-head{display:flex;align-items:center;gap:9px;padding:12px 10px 4px 18px;flex:none}
 .fly-head .dot{width:10px;height:10px;border-radius:50%;background:var(--c)}
 .fly-loc{font-size:13px;font-weight:600;color:var(--fg2);flex:1}
@@ -276,13 +312,19 @@ main{flex:1;min-height:0;padding:0 20px;transition:padding-right .28s cubic-bezi
   background:var(--acrylic);-webkit-backdrop-filter:blur(30px);backdrop-filter:blur(30px);border:1px solid var(--stroke);
   border-radius:8px;box-shadow:var(--sh28);padding:10px 16px;font-size:13.5px;transition:opacity .2s,transform .2s;max-width:calc(100vw - 32px)}
 .toast.show{opacity:1;transform:translate(-50%,0)}
+.toast.show .toast-act{pointer-events:auto}
+.toast-act{margin-left:12px;border:0;background:transparent;color:var(--brand);font-weight:600;font-size:13.5px;cursor:pointer;padding:4px 6px;border-radius:4px}
+.toast-act:hover{background:var(--subtle-h)}
+.toast small{color:var(--fg3)}
 
-@media (min-width:1180px){ body.fly-open main{padding-right:420px} }
 @media (max-width:760px){
   :root{--axisw:52px;--colmin:184px}
-  .appbar{flex-wrap:wrap;padding:10px 12px;gap:10px}
-  .brand p{display:none}
-  .search{order:3;width:100%;margin-left:0}
+  .appbar{flex-wrap:wrap;padding:14px 12px 6px;gap:10px}
+  .titlebox h1{font-size:19px;line-height:25px}
+  .meta-row{margin-top:3px;font-size:12.5px}
+  .app-actions{width:100%;margin-left:0}
+  .search{flex:1;width:auto}
+  .search kbd{display:none}
   .toolbar{padding:4px 12px 0;gap:6px 10px}
   .chips{padding:8px 12px 10px}
   .chips .hint{display:none}
@@ -294,19 +336,24 @@ main{flex:1;min-height:0;padding:0 20px;transition:padding-right .28s cubic-bezi
   .row .r-main{grid-column:2;grid-row:2}
   .row .r-side{grid-column:3;grid-row:1 / span 2}
   .conc-chip{display:none}
-  .flyout{top:auto;left:8px;right:8px;width:auto;max-height:80dvh;transform:translateY(calc(100% + 24px))}
+  .flyout{top:auto;left:8px;right:8px;bottom:8px;width:auto;max-height:80dvh;border:1px solid var(--stroke);border-radius:12px;transform:translateY(calc(100% + 24px))}
   .scrim.show{opacity:1;pointer-events:auto}
 }
 </style>
 </head>
 <body>
 <header class="appbar">
-  <div class="brand">
-    <div class="logo" id="logo"></div>
-    <div><h1>Konference GIS Esri v ČR 2026</h1><p>4.–5. listopadu 2026 · interaktivní rozvrh</p></div>
+  <div class="titlebox">
+    <h1>Konference GIS Esri v ČR 2026</h1>
+    <div class="meta-row"><span class="mi" id="dateMi">4.–5. listopadu 2026</span><span class="status-pill" id="statusPill"></span></div>
   </div>
-  <label class="search"><span id="searchIc"></span><input id="q" type="search" placeholder="Hledat přednášku, řečníka, organizaci…  ( / )" autocomplete="off"><span id="qcount"></span></label>
-  <button class="icon-btn" id="themeBtn" title="Motiv: podle systému"></button>
+  <div class="app-actions">
+    <label class="search" id="searchBox"><span id="searchIc"></span>
+      <input id="q" type="search" placeholder="Hledat přednášku, řečníka, organizaci…" autocomplete="off" aria-label="Hledat">
+      <span class="tail"><kbd title="Klávesová zkratka">/</kbd><span id="qcount"></span><button type="button" id="qclear" title="Vymazat hledání (Esc)" aria-label="Vymazat hledání"></button></span>
+    </label>
+    <button type="button" class="theme-btn" id="themeBtn"></button>
+  </div>
 </header>
 
 <div class="toolbar">
@@ -316,6 +363,7 @@ main{flex:1;min-height:0;padding:0 20px;transition:padding-right .28s cubic-bezi
     <input type="checkbox" id="onlyMine"><span class="trk"></span>
     <span>Můj program</span><span class="badge" id="mineBadge"></span><span class="badge warn" id="confBadge" title="Počet konfliktů v mém programu"></span>
   </label>
+  <button class="btn subtle" id="linkBtn" title="Zkopírovat odkaz, který otevře rozvrh s mým programem"></button>
   <button class="btn subtle" id="exportBtn" title="Stáhnout můj program jako kalendář (.ics)"></button>
   <div class="seg" id="viewSeg"></div>
   <div class="seg" id="zoomSeg" title="Měřítko časové osy"></div>
@@ -326,7 +374,7 @@ main{flex:1;min-height:0;padding:0 20px;transition:padding-right .28s cubic-bezi
 <main><div class="scroller" id="scroller"></div></main>
 
 <footer class="note">
-  <span><b>~</b> = čas jednotlivé přednášky je dopočítaný (čas sekce rovnoměrně rozdělený mezi přednášky). Minisemináře a stánek mají přesné časy.</span>
+  <span><b>~</b> = dopočítaný čas (čas sekce rovnoměrně rozdělený mezi přednášky). Začátek první a konec poslední přednášky sekce, minisemináře a stánek jsou přesné.</span>
   <span>Najeď na položku → uvidíš, co běží souběžně · klikni → detail · ★ přidá do mého programu</span>
   <span>Zdroj: <a href="https://www.arcdata.cz/cs-cz/akce/2026/konference/prednasky" target="_blank" rel="noopener">arcdata.cz</a></span>
 </footer>
@@ -353,6 +401,7 @@ const PATHS = {
   moon:'<path d="M16 12.6A6.6 6.6 0 0 1 7.4 4a6.6 6.6 0 1 0 8.6 8.6z"/>',
   auto:'<circle cx="10" cy="10" r="7"/><path d="M10 3a7 7 0 0 1 0 14z" fill="currentColor"/>',
   download:'<path d="M10 3v10M6 9.2l4 4 4-4M4 16.5h12"/>',
+  link:'<path d="M8.6 11.4a3.1 3.1 0 0 0 4.4 0l2.6-2.6a3.1 3.1 0 0 0-4.4-4.4l-1 1"/><path d="M11.4 8.6a3.1 3.1 0 0 0-4.4 0l-2.6 2.6a3.1 3.1 0 0 0 4.4 4.4l1-1"/>',
   warn:'<path d="M10 3.2l7.4 13H2.6z"/><path d="M10 8.2v3.6M10 14.1v.1"/>',
   plus:'<path d="M10 4.5v11M4.5 10h11"/>',
   minus:'<path d="M4.5 10h11"/>',
@@ -373,7 +422,7 @@ const TRACKS = [
   { id:'spol',   name:'Společenský sál' },
   { id:'jiz',    name:'Jižní sál' },
   { id:'ter',    name:'Terasa 2A' },
-  { id:'mini',   name:'Minisemináře', hint:'místo neuvedeno' },
+  { id:'mini',   name:'Minisemináře' },
   { id:'stanek', name:'Stánek konzultačních služeb', hint:'konzultace s odborníky' }
 ];
 const DAYS = [
@@ -494,14 +543,24 @@ const RAW = [
 
 const norm = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 const trackIdx = id => id === '*' ? -1 : TRACKS.findIndex(x => x.id === id);
-const SESSIONS = [], ITEMS = [], BYID = {};
+const SESSIONS = [], ITEMS = [], BYID = {}, OLD_IDS = {};
+/* Stabilní krátký kód položky = den + začátek + místnost, např. s1700j = středa 17:00 Jižní sál.
+   Nezávisí na pořadí v datech, takže uložené odkazy zůstanou platné. */
+const TCODE = { spol:'s', jiz:'j', ter:'t', mini:'m', stanek:'k', '*':'v' };
+const code = (day, track, start) => { const m = Math.round(start);
+  return day[0] + String(Math.floor(m / 60)).padStart(2, '0') + String(m % 60).padStart(2, '0') + TCODE[track]; };
 RAW.forEach((r, si) => {
   const [day, track, st, en, name, kind, items, loc] = r;
   const s = { id:'s' + si, day, track, start:t(st), end:t(en), name, kind, loc:loc || '', items:[] };
   const n = items.length, dur = (s.end - s.start) / n;
   items.forEach(([title, sp], ii) => {
-    const it = { id:`${day}-${si}-${ii}`, day, track, sess:s, title, sp, kind,
-      start:s.start + ii * dur, end:s.start + (ii + 1) * dur, est:n > 1 };
+    const start = s.start + ii * dur;
+    const it = { id:code(day, track, start), day, track, sess:s, title, sp, kind,
+      start, end:s.start + (ii + 1) * dur, est:n > 1,
+      estS:ii > 0,          // začátek je dopočítaný (první přednáška začíná přesně se sekcí)
+      estE:ii < n - 1 };    // konec je dopočítaný (poslední končí přesně se sekcí)
+    if (BYID[it.id]) console.error('Duplicitní kód položky', it.id);
+    OLD_IDS[`${day}-${si}-${ii}`] = it.id;   // převod z ID předchozí verze (localStorage)
     s.items.push(it); ITEMS.push(it); BYID[it.id] = it;
   });
   SESSIONS.push(s);
@@ -512,7 +571,7 @@ ITEMS.forEach(it => { it.hay = norm([it.title, it.sess.name, locName(it), ...it.
 
 /* ---------- Pomocné ---------- */
 const fmt = m => { m = Math.round(m); return `${Math.floor(m / 60)}:${String(m % 60).padStart(2, '0')}`; };
-const range = it => (it.est ? '~' : '') + fmt(it.start) + '–' + fmt(it.end);
+const range = it => (it.estS ? '~' : '') + fmt(it.start) + '–' + (it.estE ? '~' : '') + fmt(it.end);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
 const overlap = (a, b) => a !== b && a.day === b.day && a.start < b.end - 0.01 && b.start < a.end - 0.01;
 const pl = (n, one, few, many) => n === 1 ? one : (n >= 2 && n <= 4 ? few : many);
@@ -533,7 +592,7 @@ try {
     if (s.view === 'grid' || s.view === 'list') state.view = s.view;
     if (typeof s.ppm === 'number') state.ppm = Math.min(7, Math.max(2, s.ppm));
     if (Array.isArray(s.hidden)) state.hidden = new Set(s.hidden.filter(id => trackIdx(id) >= 0));
-    if (Array.isArray(s.mine)) state.mine = new Set(s.mine.filter(id => BYID[id]));
+    if (Array.isArray(s.mine)) state.mine = new Set(s.mine.map(id => BYID[id] ? id : OLD_IDS[id]).filter(Boolean));
     state.onlyMine = !!s.onlyMine;
     if (['system', 'light', 'dark'].includes(s.theme)) state.theme = s.theme;
   }
@@ -545,21 +604,93 @@ const save = () => { try { localStorage.setItem(KEY, JSON.stringify({ day:state.
 /* ---------- Elementy ---------- */
 const $ = id => document.getElementById(id);
 const scroller = $('scroller'), flyout = $('flyout'), scrim = $('scrim');
-$('logo').innerHTML = svg('map');
 $('searchIc').outerHTML = svg('search');
+$('qclear').innerHTML = svg('dismiss');
+$('dateMi').insertAdjacentHTML('afterbegin', svg('cal'));
+
+/* Stav konference v záhlaví: odpočet / právě probíhá / proběhla */
+function renderStatus() {
+  const el = $('statusPill'), today = nowInfo().iso, first = DAYS[0].iso, last = DAYS[DAYS.length - 1].iso;
+  const di = DAYS.findIndex(d => d.iso === today);
+  el.className = 'status-pill';
+  if (di >= 0) { el.classList.add('live'); el.textContent = `Právě probíhá · ${di + 1}. den`; }
+  else if (today > last) { el.classList.add('past'); el.textContent = 'Konference proběhla'; }
+  else {
+    const n = Math.round((Date.parse(first) - Date.parse(today)) / 864e5);
+    el.textContent = n === 1 ? 'Zítra' : `Za ${n} ${pl(n, 'den', 'dny', 'dní')}`;
+  }
+}
 $('exportBtn').innerHTML = svg('download') + '<span>Export .ics</span>';
+$('linkBtn').innerHTML = svg('link') + '<span>Kopírovat odkaz</span>';
 $('onlyMine').checked = state.onlyMine;
 
 let toastT;
-function toast(msg) { const el = $('toast'); el.innerHTML = msg; el.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('show'), 3200); }
+function toast(msg, action, ms) {
+  const el = $('toast'); el.innerHTML = msg;
+  if (action) {
+    const b = document.createElement('button'); b.className = 'toast-act'; b.textContent = action.label;
+    b.onclick = () => { el.classList.remove('show'); action.fn(); };
+    el.appendChild(b);
+  }
+  el.classList.add('show'); clearTimeout(toastT);
+  toastT = setTimeout(() => el.classList.remove('show'), ms || (action ? 9000 : 3200));
+}
+
+/* ---------- Odkaz s mým programem (#moje=kód,kód,…) ---------- */
+const HKEY = 'moje';
+const sameSet = (a, b) => a.size === b.size && [...a].every(x => b.has(x));
+const DAY_ORDER = Object.fromEntries(DAYS.map((d, i) => [d.id, i]));
+const mineParam = () => ITEMS.filter(i => state.mine.has(i.id))
+  .sort((a, b) => DAY_ORDER[a.day] - DAY_ORDER[b.day] || a.start - b.start).map(i => i.id).join(',');
+const baseURL = () => location.href.replace(/[?#].*$/, '');
+const shareURL = () => baseURL() + (state.mine.size ? `#${HKEY}=${mineParam()}` : '');
+function readLink() {
+  let v = null;
+  try {
+    const h = new URLSearchParams(location.hash.replace(/^#/, ''));
+    const q = new URLSearchParams(location.search);
+    v = h.has(HKEY) ? h.get(HKEY) : q.has(HKEY) ? q.get(HKEY) : null;
+  } catch (e) {}
+  return v === null ? null : new Set(v.split(/[,;\s]+/).filter(id => BYID[id]));
+}
+function syncURL() {   // adresa v adresním řádku vždy odpovídá aktuálnímu výběru → stačí uložit do záložek
+  const url = shareURL();
+  if (url === location.href) return;
+  try { history.replaceState(null, '', url); }
+  catch (e) { try { location.replace(state.mine.size ? `#${HKEY}=${mineParam()}` : '#'); } catch (e2) {} }
+}
+function setMine(set) {
+  state.mine = new Set(set); save(); syncURL();
+  applyFilters(); updateBadges(); if (state.selected) renderFly();
+}
+function loadFromLink(fromLink) {
+  if (!fromLink || sameSet(fromLink, state.mine)) return;
+  const prev = new Set(state.mine);
+  setMine(fromLink);
+  const firstDay = ITEMS.filter(i => fromLink.has(i.id)).map(i => DAY_ORDER[i.day]).sort()[0];
+  if (firstDay !== undefined && !ITEMS.some(i => fromLink.has(i.id) && DAY_ORDER[i.day] === state.day)) {
+    if (state.selected) closeFly();
+    state.day = firstDay; save(); render(); scroller.scrollTop = 0;
+  }
+  const n = fromLink.size;
+  toast(`Načten program z odkazu: ${n} ${pl(n, 'položka', 'položky', 'položek')}.`,
+    prev.size ? { label:'Vrátit můj původní', fn:() => { setMine(prev); toast('Obnoven tvůj původní program.'); } } : null);
+}
 
 function applyTheme() {
   const r = document.documentElement;
   if (state.theme === 'system') r.removeAttribute('data-theme'); else r.setAttribute('data-theme', state.theme);
+  const cur = THEMES[state.theme], next = THEMES[cur.next];
   const b = $('themeBtn');
-  b.innerHTML = svg(state.theme === 'light' ? 'sun' : state.theme === 'dark' ? 'moon' : 'auto');
-  b.title = 'Motiv: ' + ({ system:'podle systému', light:'světlý', dark:'tmavý' })[state.theme];
+  b.innerHTML = svg(cur.icon);
+  b.title = `Motiv: ${cur.label} – kliknutím přepneš na ${next.acc}`;
+  b.setAttribute('aria-label', b.title);
 }
+const THEMES = {
+  system:{ icon:'auto', label:'podle systému', acc:'motiv podle systému', next:'light' },
+  light: { icon:'sun',  label:'světlý',        acc:'světlý',              next:'dark' },
+  dark:  { icon:'moon', label:'tmavý',         acc:'tmavý',               next:'system' }
+};
 
 function conflicts() {
   const mine = ITEMS.filter(i => state.mine.has(i.id)), out = new Set();
@@ -594,8 +725,9 @@ function updateBadges() {
 }
 
 /* ---------- Render: mřížka ---------- */
-function cardHTML(it, top, hgt, first) {
-  const inner = hgt - 14, metaH = 15, lh = 16.5;
+const GAP = 3;   // musí odpovídat --gap v CSS
+function cardHTML(it, top, hgt) {
+  const cardH = hgt - 2 * GAP, inner = cardH - 12 - 2, metaH = 15, lh = 17;
   const showMeta = inner >= metaH + lh - 1;
   let lines, showSp = false;
   if (!showMeta) lines = 1;
@@ -605,10 +737,11 @@ function cardHTML(it, top, hgt, first) {
     else lines = Math.max(1, Math.min(lines, 6));
   }
   const s = it.sess;
-  let label = '';
-  if (first) label = s.kind === 'mini' ? 'Miniseminář' : s.kind === 'booth' ? 'Konzultace' : s.name;
+  // Název bloku na každé kartě (karta je srozumitelná i samostatně – při filtrování, hledání, „Můj program“).
+  // Ve sloupcích Minisemináře a Stánek ho říká už záhlaví sloupce; u položek pojmenovaných stejně jako blok se neopakuje.
+  const label = (it.track === 'mini' || it.track === 'stanek' || it.title === s.name) ? '' : s.name;
   const names = it.sp.map(p => p.n).join(', ');
-  return `<button class="talk card${!showMeta ? ' tiny' : ''}" data-id="${it.id}" style="top:${top + 1}px;height:${hgt - 2}px" title="${esc(range(it) + ' · ' + it.title + (names ? ' — ' + names : ''))}">`
+  return `<button class="talk card${!showMeta ? ' tiny' : ''}" data-id="${it.id}" style="top:${top + GAP}px;height:${cardH}px" title="${esc(range(it) + ' · ' + it.title + (names ? ' — ' + names : ''))}">`
     + (showMeta ? `<span class="meta">${range(it)}${label ? ` · <b>${esc(label)}</b>` : ''}</span>` : '')
     + `<span class="ttl" style="-webkit-line-clamp:${lines}">${esc(it.title)}</span>`
     + (showSp ? `<span class="sp">${esc(names)}</span>` : '')
@@ -630,7 +763,7 @@ function renderGrid() {
     h += `<div class="col" data-track="${tr.id}" style="--c:var(--c-${tr.id})">`;
     for (const s of SESSIONS.filter(s => s.day === day.id && s.track === tr.id)) {
       h += `<div class="sess" style="top:${y(s.start)}px;height:${(s.end - s.start) * ppm}px">`;
-      s.items.forEach((it, i) => { h += cardHTML(it, (it.start - s.start) * ppm, (it.end - it.start) * ppm, i === 0); });
+      s.items.forEach(it => { h += cardHTML(it, (it.start - s.start) * ppm, (it.end - it.start) * ppm); });
       h += '</div>';
     }
     h += '</div>';
@@ -638,7 +771,7 @@ function renderGrid() {
   h += '<div class="overlay"><div class="nowline" id="nowline"><span></span></div>';
   for (const s of SESSIONS.filter(s => s.day === day.id && s.track === '*')) {
     const it = s.items[0], endV = Math.min(s.end, day.end);
-    h += `<button class="talk card span-ev" data-id="${it.id}" style="--c:var(--c-social);top:${y(s.start) + 2}px;height:${(endV - s.start) * ppm - 4}px"><b>${esc(s.name)}</b><span>${fmt(s.start)}–${fmt(s.end)} · ${esc(s.loc)}</span>${s.end > day.end ? `<i>pokračuje až do ${fmt(s.end)} ↓</i>` : ''}</button>`;
+    h += `<button class="talk card span-ev" data-id="${it.id}" style="--c:var(--c-social);top:${y(s.start) + GAP}px;height:${(endV - s.start) * ppm - 2 * GAP}px"><b>${esc(s.name)}</b><span>${fmt(s.start)}–${fmt(s.end)} · ${esc(s.loc)}</span>${s.end > day.end ? `<i>pokračuje až do ${fmt(s.end)} ↓</i>` : ''}<span class="star-ind">${svg('star', true)}</span></button>`;
   }
   h += '</div></div></div>';
   scroller.innerHTML = h;
@@ -682,6 +815,7 @@ function applyFilters() {
     if (toks.length && mq) cnt++;
   });
   $('qcount').textContent = toks.length ? `${cnt} ${pl(cnt, 'shoda', 'shody', 'shod')}` : '';
+  $('searchBox').classList.toggle('has-q', state.q.length > 0);
   renderTabs();
 }
 function applyFocus() {
@@ -693,6 +827,9 @@ function applyFocus() {
     const it = BYID[el.dataset.id];
     el.classList.toggle('focused', !!fi && it === fi);
     el.classList.toggle('conc', !!fi && overlap(it, fi));
+    const sess = el.parentElement;
+    if (sess.classList.contains('sess') && el === sess.firstElementChild)
+      sess.classList.toggle('hl', on && fi.sess === it.sess);
   });
   const band = $('band');
   if (band && on) { band.style.top = (fi.start - day.start) * state.ppm + 'px'; band.style.height = (fi.end - fi.start) * state.ppm + 'px'; }
@@ -771,7 +908,7 @@ function toggleStar(id) {
     const clash = ITEMS.filter(o => state.mine.has(o.id) && overlap(o, it));
     toast(clash.length ? `⚠ Přidáno, ale překrývá se s: <b>${esc(clash[0].title)}</b>${clash.length > 1 ? ` (+${clash.length - 1})` : ''}` : '★ Přidáno do mého programu');
   }
-  save(); applyFilters(); updateBadges();
+  save(); syncURL(); applyFilters(); updateBadges();
   if (state.selected) renderFly();
 }
 
@@ -803,13 +940,16 @@ function download(name, text) {
 }
 
 /* ---------- Události ---------- */
+let clickT = null;
+/* Najetí i odjetí se zpracuje hned (bez prodlevy), animaci obstará CSS – stejně rychle tam i zpět.
+   Při přejezdu přes mezeru mezi kartami se rozběhnutý přechod jen plynule obrátí, takže nebliká. */
+const setFocus = id => { if (id !== state.focus) { state.focus = id; applyFocus(); } };
 scroller.addEventListener('mouseover', e => {
   if (state.selected || state.view !== 'grid') return;
   const el = e.target.closest('.talk');
-  const id = el ? el.dataset.id : null;
-  if (id !== state.focus) { state.focus = id; applyFocus(); }
+  setFocus(el ? el.dataset.id : null);
 });
-scroller.addEventListener('mouseleave', () => { if (!state.selected && state.focus) { state.focus = null; applyFocus(); } });
+scroller.addEventListener('mouseleave', () => { if (!state.selected && state.focus) setFocus(null); });
 scroller.addEventListener('focusin', e => {
   const el = e.target.closest('.talk');
   if (el && !state.selected && state.view === 'grid') { state.focus = el.dataset.id; applyFocus(); }
@@ -818,10 +958,22 @@ scroller.addEventListener('click', e => {
   const star = e.target.closest('[data-star]');
   if (star) { e.stopPropagation(); toggleStar(star.dataset.star); return; }
   const el = e.target.closest('.talk');
-  if (el) { if (state.selected === el.dataset.id) closeFly(); else openFly(el.dataset.id); }
-  else if (state.selected) closeFly();
+  if (!el) { if (state.selected) closeFly(); return; }
+  if (e.detail > 1) return;                       // druhé kliknutí dvojkliku – vyřeší ho dblclick
+  const id = el.dataset.id;
+  const act = () => { clickT = null; if (state.selected === id) closeFly(); else openFly(id); };
+  clearTimeout(clickT);
+  // Na kartách mřížky se jednoduché kliknutí krátce odloží, aby dvojklik (= ★) nejdřív neotevřel/nezavřel panel.
+  // Přepnutí na jinou položku při otevřeném panelu nic neposouvá, proto proběhne hned.
+  const switching = state.selected && state.selected !== id;
+  if (el.classList.contains('card') && e.detail === 1 && !switching) clickT = setTimeout(act, 240);
+  else act();
 });
-scroller.addEventListener('dblclick', e => { const el = e.target.closest('.card'); if (el) toggleStar(el.dataset.id); });
+scroller.addEventListener('dblclick', e => {
+  const el = e.target.closest('.card'); if (!el) return;
+  clearTimeout(clickT); clickT = null;
+  toggleStar(el.dataset.id);
+});
 scroller.addEventListener('keydown', e => {
   if (e.key !== 'Enter' && e.key !== ' ') return;
   const star = e.target.closest('[data-star]');
@@ -875,9 +1027,32 @@ $('exportBtn').addEventListener('click', () => {
   download('muj-program-gis-2026.ics', buildICS(items));
   toast(`Staženo ${items.length} ${pl(items.length, 'událost', 'události', 'událostí')} do kalendáře`);
 });
+$('linkBtn').addEventListener('click', async () => {
+  if (!state.mine.size) { toast('Nejdřív si ★ označ položky do svého programu.'); return; }
+  const url = shareURL();
+  syncURL();
+  let ok = false;
+  try { await navigator.clipboard.writeText(url); ok = true; } catch (e) {}
+  if (!ok) {   // záloha pro prohlížeče bez Clipboard API
+    const ta = document.createElement('textarea'); ta.value = url; ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0'; document.body.appendChild(ta); ta.select();
+    try { ok = document.execCommand('copy'); } catch (e) {}
+    ta.remove();
+  }
+  const n = state.mine.size;
+  if (!ok) { toast('Kopírování se nepovedlo – zkopíruj adresu přímo z adresního řádku.', null, 6000); return; }
+  toast(`Odkaz s ${n} ${pl(n, 'položkou', 'položkami', 'položkami')} zkopírován. Ulož si ho do záložek nebo ho pošli dál.`
+    + (location.protocol === 'file:' ? '<br><small>Soubor je otevřený z disku, takže odkaz bude fungovat jen na tomto počítači.</small>' : ''),
+    null, location.protocol === 'file:' ? 7000 : 4000);
+});
+window.addEventListener('hashchange', () => loadFromLink(readLink()));
 $('q').addEventListener('input', e => { state.q = e.target.value; applyFilters(); });
 $('themeBtn').addEventListener('click', () => {
-  state.theme = ({ system:'light', light:'dark', dark:'system' })[state.theme]; save(); applyTheme();
+  state.theme = THEMES[state.theme].next; save(); applyTheme();
+  toast(`Motiv: ${THEMES[state.theme].label}`, null, 1400);   // „podle systému“ a „světlý“ můžou vypadat stejně – krátké potvrzení
+});
+$('qclear').addEventListener('click', e => {
+  e.preventDefault(); state.q = ''; $('q').value = ''; applyFilters(); $('q').focus();
 });
 document.addEventListener('keydown', e => {
   const typing = /INPUT|TEXTAREA/.test(document.activeElement.tagName);
@@ -890,7 +1065,10 @@ document.addEventListener('keydown', e => {
 });
 
 applyTheme();
+renderStatus();
 render();
+loadFromLink(readLink());   // odkaz s #moje=… má přednost před uloženým výběrem (s možností vrátit)
+syncURL();                  // a naopak: uložený výběr se promítne do adresy
 scrollToNow();
 setInterval(updateNow, 30000);
 })();
