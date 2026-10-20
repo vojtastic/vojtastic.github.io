@@ -113,24 +113,35 @@ button{font:inherit;color:inherit}
 #qclear:hover{background:var(--subtle-h);color:var(--fg)}
 .search.has-q #qclear{display:grid}
 /* Přepínač motivu – jedno tlačítko, ikona ukazuje aktuální stav; stejný materiál a výška jako pole hledání */
-.theme-btn{width:36px;height:36px;flex:none;border:1px solid var(--stroke);border-radius:6px;background:var(--surface);box-shadow:var(--sh2);
+.hdr-btn{width:36px;height:36px;flex:none;border:1px solid var(--stroke);border-radius:6px;background:var(--surface);box-shadow:var(--sh2);
   color:var(--fg2);display:grid;place-items:center;cursor:pointer;transition:background-color var(--fade) var(--ease),border-color var(--fade) var(--ease)}
-.theme-btn:hover{background:var(--surface-h);border-color:var(--stroke-s);color:var(--fg)}
-.theme-btn .ic{width:18px;height:18px}
+.hdr-btn:hover{background:var(--surface-h);border-color:var(--stroke-s);color:var(--fg)}
+.hdr-btn .ic{width:18px;height:18px}
 .icon-btn{width:32px;height:32px;border-radius:4px;border:0;background:transparent;display:grid;place-items:center;cursor:pointer;color:var(--fg2);flex:none}
 .icon-btn:hover{background:var(--subtle-h)}
 
 /* Toolbar */
-.toolbar{display:flex;align-items:center;flex-wrap:wrap;gap:8px 14px;padding:6px 20px 0;flex:none}
+.toolbar{display:flex;align-items:center;flex-wrap:wrap;gap:8px 16px;padding:6px 20px 0;flex:none}
+.tb-mine{display:flex;align-items:center;gap:10px;margin-left:auto}
+.tb-view{display:flex;align-items:center;gap:6px}
+/* Ikonová tlačítka (odkaz, kalendář, vymazat, celá obrazovka) */
+.ibtns{display:flex;align-items:center;gap:2px}
+.ibtn{width:32px;height:32px;flex:none;border:0;border-radius:4px;background:transparent;color:var(--fg2);display:grid;place-items:center;cursor:pointer;
+  transition:background-color var(--fade) var(--ease),color var(--fade) var(--ease)}
+.ibtn:hover{background:var(--subtle-h);color:var(--fg)}
+.ibtn[hidden]{display:none}
+.ibtn .ic{width:18px;height:18px}
+.ibtn.on{color:var(--gold)}
+.ibtn.on .ic{fill:currentColor}
 .pivot{display:flex;gap:2px}
 .pivot button{position:relative;border:0;background:transparent;padding:10px 12px 12px;font-size:14px;color:var(--fg2);cursor:pointer;border-radius:4px;display:inline-flex;align-items:center;gap:6px}
 .pivot button:hover{background:var(--subtle)}
 .pivot button.on{color:var(--fg);font-weight:600}
 .pivot button.on::after{content:"";position:absolute;left:12px;right:12px;bottom:3px;height:3px;border-radius:2px;background:var(--brand)}
 .pivot .d{color:var(--fg3);font-weight:400}
+.pivot .ds{display:none}
 .pill{font-size:11px;font-weight:600;line-height:16px;padding:0 6px;border-radius:999px;background:var(--subtle-h);color:var(--fg2)}
 .pill.star{background:var(--gold-bg);color:var(--gold-fg)}
-.spacer{flex:1}
 .switch{display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-size:13.5px;user-select:none;position:relative}
 .switch input{position:absolute;opacity:0;width:1px;height:1px}
 .switch .trk{width:40px;height:20px;border-radius:10px;border:1px solid var(--fg3);position:relative;transition:background .15s,border-color .15s;flex:none}
@@ -157,14 +168,15 @@ button{font:inherit;color:inherit}
 .seg button:disabled{opacity:.4;cursor:default}
 
 /* Chips */
-.chips{display:flex;flex-wrap:wrap;gap:8px;padding:10px 20px 12px;flex:none;align-items:center}
+.chips-row{display:flex;align-items:center;gap:8px;padding:10px 20px 12px;flex:none}
+.chips{display:flex;flex-wrap:wrap;gap:8px;align-items:center;flex:1;min-width:0}
+#fsExit{display:none}
 .chip{display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 12px;border-radius:999px;border:1px solid var(--stroke);
   background:var(--surface);font-size:12.5px;color:var(--fg2);cursor:pointer;box-shadow:var(--sh2)}
 .chip:hover{background:var(--surface-h)}
 .chip .dot{width:10px;height:10px;border-radius:50%;background:var(--c)}
 .chip.off{background:transparent;color:var(--fg4);box-shadow:none}
 .chip.off .dot{background:transparent;box-shadow:inset 0 0 0 1.5px var(--c)}
-.chips .hint{font-size:12px;color:var(--fg4);margin-left:4px}
 
 /* Main */
 main{flex:1;min-height:0;padding:0 20px}
@@ -279,7 +291,8 @@ main{flex:1;min-height:0;padding:0 20px}
   transform:translateX(calc(100% + 32px));visibility:hidden;
   transition:transform .28s cubic-bezier(.1,.9,.2,1),visibility 0s linear .28s}
 .flyout.open{transform:none;visibility:visible;transition:transform .28s cubic-bezier(.1,.9,.2,1),visibility 0s}
-.fly-head{display:flex;align-items:center;gap:9px;padding:12px 10px 4px 18px;flex:none}
+.fly-head{display:flex;align-items:center;gap:4px;padding:10px 8px 4px 18px;flex:none}
+.fly-head .dot{margin-right:5px}
 .fly-head .dot{width:10px;height:10px;border-radius:50%;background:var(--c)}
 .fly-loc{font-size:13px;font-weight:600;color:var(--fg2);flex:1}
 .fly-body{overflow:auto;padding:0 18px 20px}
@@ -287,9 +300,8 @@ main{flex:1;min-height:0;padding:0 20px}
 .fly-body h2{font-family:var(--font-d);font-size:20px;line-height:26px;font-weight:600;margin:4px 0 12px}
 .info{display:flex;gap:10px;align-items:flex-start;color:var(--fg2);font-size:13.5px;margin:7px 0}
 .info .ic{color:var(--fg3);margin-top:2px}
-.note-box{font-size:12.5px;line-height:17px;color:var(--fg2);background:var(--subtle);border-radius:6px;padding:8px 10px;margin:10px 0}
+.est-note{font-size:12px;line-height:16px;color:var(--fg3);margin:-3px 0 9px 26px}
 .warn-box{display:flex;gap:8px;font-size:12.5px;color:var(--danger);background:var(--danger-tint);border-radius:6px;padding:8px 10px;margin:10px 0}
-.actions{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
 .fly-body h4{font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--fg3);margin:20px 0 6px;display:flex;align-items:center;gap:6px}
 .speakers{list-style:none;margin:0;padding:0}
 .speakers li{padding:7px 0;border-top:1px solid var(--stroke)}
@@ -307,9 +319,31 @@ main{flex:1;min-height:0;padding:0 20px}
 .muted{color:var(--fg3);font-size:13px;margin:4px 0}
 .scrim{position:fixed;inset:0;background:rgba(0,0,0,.28);z-index:40;opacity:0;pointer-events:none;transition:opacity .2s}
 
-/* Footer + toast */
-.note{flex:none;padding:8px 20px 10px;font-size:12px;color:var(--fg3);display:flex;flex-wrap:wrap;gap:4px 18px}
-.note a{color:var(--brand)}
+/* Nápověda – dialog uprostřed obrazovky */
+.modal-scrim{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.32);opacity:0;pointer-events:none;transition:opacity var(--fade) var(--ease)}
+.modal-scrim.show{opacity:1;pointer-events:auto}
+.modal{position:fixed;left:50%;top:50%;z-index:71;width:min(620px,calc(100vw - 24px));max-height:min(86dvh,760px);display:flex;flex-direction:column;
+  background:var(--surface);border:1px solid var(--stroke);border-radius:10px;box-shadow:var(--sh28);overflow:hidden;
+  transform:translate(-50%,-49%) scale(.985);opacity:0;visibility:hidden;
+  transition:opacity var(--fade) var(--ease),transform var(--fade) var(--ease),visibility 0s linear var(--fade)}
+.modal.open{transform:translate(-50%,-50%);opacity:1;visibility:visible;transition:opacity var(--fade) var(--ease),transform var(--fade) var(--ease),visibility 0s}
+.modal-head{display:flex;align-items:center;gap:10px;padding:16px 12px 8px 22px;flex:none}
+.modal-head h2{flex:1;margin:0;font-family:var(--font-d);font-size:20px;line-height:26px;font-weight:600}
+.modal-body{overflow:auto;padding:0 22px 22px;font-size:13.5px;line-height:20px;color:var(--fg2)}
+.modal-body h3{margin:18px 0 6px;font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--fg3)}
+.modal-body h3:first-child{margin-top:4px}
+.modal-body ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+.modal-body li{display:grid;grid-template-columns:24px minmax(0,1fr);gap:10px;align-items:start}
+.modal-body li > .k{display:grid;place-items:center;height:20px;color:var(--fg2);font-weight:600}
+.modal-body li > .k .ic{width:17px;height:17px}
+.modal-body li > .k .dots{display:flex;gap:2px}
+.modal-body li > .k .dots i{width:6px;height:6px;border-radius:50%}
+.modal-body b{color:var(--fg);font-weight:600}
+.modal-body kbd{font:600 11px/1 var(--font);color:var(--fg2);border:1px solid var(--stroke-s);border-bottom-width:2px;border-radius:4px;padding:2px 5px;background:var(--layer)}
+.modal-body .src{margin:18px 0 0;font-size:12.5px;color:var(--fg3)}
+.modal-body a{color:var(--brand)}
+
+/* Toast */
 .toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);opacity:0;z-index:60;pointer-events:none;
   background:var(--acrylic);-webkit-backdrop-filter:blur(30px);backdrop-filter:blur(30px);border:1px solid var(--stroke);
   border-radius:8px;box-shadow:var(--sh28);padding:10px 16px;font-size:13.5px;transition:opacity .2s,transform .2s;max-width:calc(100vw - 32px)}
@@ -319,6 +353,12 @@ main{flex:1;min-height:0;padding:0 20px}
 .toast-act:hover{background:var(--subtle-h)}
 .toast small{color:var(--fg3)}
 
+/* Režim celé obrazovky: jen filtr sálů a rozvrh */
+body.compact .appbar,body.compact .toolbar{display:none}
+body.compact #fsExit{display:grid}
+body.compact .chips-row{padding-top:10px}
+#zoomSeg[hidden]{display:none}
+
 @media (max-width:760px){
   :root{--axisw:52px;--colmin:184px}
   .appbar{flex-wrap:wrap;padding:14px 12px 6px;gap:10px}
@@ -327,17 +367,32 @@ main{flex:1;min-height:0;padding:0 20px}
   .app-actions{width:100%;margin-left:0}
   .search{flex:1;width:auto}
   .search kbd{display:none}
-  .toolbar{padding:4px 12px 0;gap:6px 10px}
-  .chips{padding:8px 12px 10px}
-  .chips .hint{display:none}
+  /* Lišta na malém displeji: 1. řádek dny + zobrazení, 2. řádek můj program přes celou šířku */
+  .toolbar{padding:2px 12px 0;gap:4px 8px}
+  .pivot button{padding:9px 9px 11px;font-size:13.5px}
+  .pivot button.on::after{left:9px;right:9px}
+  .pivot .dn{display:none}
+  .pivot .ds{display:inline}
+  .tb-view{order:1;margin-left:auto;gap:4px}
+  .tb-mine{order:2;width:100%;margin-left:0;justify-content:space-between}
+  .seg button{padding:0 9px}
+  .seg .lbl{display:none}
+  .chips-row{padding:8px 12px 10px}
+  .chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:-3px;padding:3px 24px 3px 3px;
+    -webkit-mask-image:linear-gradient(to right,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 28px),transparent)}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{flex:none}
   main{padding:0 8px}
-  .note{padding:6px 12px 8px}
+  .modal-head{padding:14px 8px 6px 18px}
+  .modal-body{padding:0 18px 18px}
   .row{grid-template-columns:4px minmax(0,1fr) auto;gap:10px}
   .row .r-time{grid-column:2;grid-row:1;font-size:12px}
   .row .r-bar{grid-column:1;grid-row:1 / span 2}
   .row .r-main{grid-column:2;grid-row:2}
   .row .r-side{grid-column:3;grid-row:1 / span 2}
   .conc-chip{display:none}
+  body.compact main{padding:0 4px}
+  body.compact .chips-row{padding:6px 8px 8px}
   .flyout{top:auto;left:8px;right:8px;bottom:8px;width:auto;max-height:80dvh;border:1px solid var(--stroke);border-radius:12px;transform:translateY(calc(100% + 24px))}
   .scrim.show{opacity:1;pointer-events:auto}
 }
@@ -354,33 +409,43 @@ main{flex:1;min-height:0;padding:0 20px}
       <input id="q" type="search" placeholder="Hledat přednášku, řečníka, organizaci…" autocomplete="off" aria-label="Hledat">
       <span class="tail"><kbd title="Klávesová zkratka">/</kbd><span id="qcount"></span><button type="button" id="qclear" title="Vymazat hledání (Esc)" aria-label="Vymazat hledání"></button></span>
     </label>
-    <button type="button" class="theme-btn" id="themeBtn"></button>
+    <button type="button" class="hdr-btn" id="themeBtn"></button>
+    <button type="button" class="hdr-btn" id="helpBtn" title="Nápověda – jak rozvrh používat" aria-label="Nápověda"></button>
   </div>
 </header>
 
 <div class="toolbar">
   <div class="pivot" role="tablist" id="dayTabs"></div>
-  <div class="spacer"></div>
-  <label class="switch" title="Zobrazit jen položky označené hvězdičkou">
-    <input type="checkbox" id="onlyMine"><span class="trk"></span>
-    <span>Můj program</span><span class="badge" id="mineBadge"></span><span class="badge warn" id="confBadge" title="Počet konfliktů v mém programu"></span>
-  </label>
-  <button class="btn subtle" id="linkBtn" title="Zkopírovat odkaz, který otevře rozvrh s mým programem"></button>
-  <button class="btn subtle" id="exportBtn" title="Stáhnout můj program jako kalendář (.ics)"></button>
-  <button class="btn subtle" id="clearBtn" title="Odebrat všechny položky z mého programu" hidden></button>
-  <div class="seg" id="viewSeg"></div>
-  <div class="seg" id="zoomSeg" title="Měřítko časové osy"></div>
+  <div class="tb-mine">
+    <label class="switch" title="Zobrazit jen položky označené hvězdičkou">
+      <input type="checkbox" id="onlyMine"><span class="trk"></span>
+      <span>Můj program</span><span class="badge" id="mineBadge"></span><span class="badge warn" id="confBadge" title="Počet konfliktů v mém programu"></span>
+    </label>
+    <div class="ibtns">
+      <button type="button" class="ibtn" id="linkBtn" title="Kopírovat odkaz na můj program" aria-label="Kopírovat odkaz na můj program"></button>
+      <button type="button" class="ibtn" id="exportBtn" title="Přidat můj program do kalendáře (.ics)" aria-label="Přidat můj program do kalendáře"></button>
+      <button type="button" class="ibtn" id="clearBtn" title="Vymazat můj program" aria-label="Vymazat můj program" hidden></button>
+    </div>
+  </div>
+  <div class="tb-view">
+    <div class="seg" id="viewSeg"></div>
+    <div class="seg" id="zoomSeg" title="Měřítko časové osy"></div>
+    <button type="button" class="ibtn" id="fsBtn" title="Rozvrh na celou obrazovku" aria-label="Rozvrh na celou obrazovku"></button>
+  </div>
 </div>
 
-<div class="chips" id="chips"></div>
+<div class="chips-row">
+  <div class="chips" id="chips"></div>
+  <button type="button" class="ibtn" id="fsExit" title="Ukončit zobrazení na celou obrazovku" aria-label="Ukončit zobrazení na celou obrazovku"></button>
+</div>
 
 <main><div class="scroller" id="scroller"></div></main>
 
-<footer class="note">
-  <span><b>~</b> = dopočítaný čas (čas sekce rovnoměrně rozdělený mezi přednášky). Začátek první a konec poslední přednášky sekce, minisemináře a stánek jsou přesné.</span>
-  <span>Najeď na položku → uvidíš, co běží souběžně · klikni → detail · ★ přidá do mého programu</span>
-  <span>Zdroj: <a href="https://www.arcdata.cz/cs-cz/akce/2026/konference/prednasky" target="_blank" rel="noopener">arcdata.cz</a></span>
-</footer>
+<div class="modal-scrim" id="helpScrim"></div>
+<div class="modal" id="help" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+  <div class="modal-head"><h2 id="helpTitle">Jak rozvrh používat</h2><button type="button" class="icon-btn" data-close-help title="Zavřít (Esc)" aria-label="Zavřít"></button></div>
+  <div class="modal-body" id="helpBody"></div>
+</div>
 
 <aside class="flyout" id="flyout" aria-label="Detail položky"></aside>
 <div class="scrim" id="scrim"></div>
@@ -409,6 +474,10 @@ const PATHS = {
   warn:'<path d="M10 3.2l7.4 13H2.6z"/><path d="M10 8.2v3.6M10 14.1v.1"/>',
   plus:'<path d="M10 4.5v11M4.5 10h11"/>',
   minus:'<path d="M4.5 10h11"/>',
+  expand:'<path d="M3.5 7.5v-4h4M16.5 7.5v-4h-4M3.5 12.5v4h4M16.5 12.5v4h-4"/>',
+  collapse:'<path d="M7.5 3.5v4h-4M12.5 3.5v4h4M7.5 16.5v-4h-4M12.5 16.5v-4h4"/>',
+  info:'<circle cx="10" cy="10" r="7.2"/><path d="M10 9.1v4.6M10 6.6v.1"/>',
+  hand:'<path d="M7.5 10.5V4.8a1.3 1.3 0 0 1 2.6 0v4.7"/><path d="M10.1 9.3V8a1.3 1.3 0 0 1 2.6 0v1.6M12.7 9.4a1.3 1.3 0 0 1 2.6 0v2.8a5 5 0 0 1-5 5h-.6a5 5 0 0 1-3.9-1.9l-2.2-2.8a1.3 1.3 0 0 1 2-1.6l1.3 1.3"/>',
   map:'<path d="M3 5.2l4.6-2 4.8 2 4.6-2v11.6l-4.6 2-4.8-2-4.6 2z"/><path d="M7.6 3.2v11.6M12.4 5.2v11.6"/>'
 };
 const svg = (n, fill) => `<svg class="ic${fill ? ' fill' : ''}" viewBox="0 0 20 20" aria-hidden="true">${PATHS[n]}</svg>`;
@@ -624,9 +693,13 @@ function renderStatus() {
     el.textContent = n === 1 ? 'Zítra' : `Za ${n} ${pl(n, 'den', 'dny', 'dní')}`;
   }
 }
-$('exportBtn').innerHTML = svg('download') + '<span>Export .ics</span>';
-$('clearBtn').innerHTML = svg('trash') + '<span>Vymazat</span>';
-$('linkBtn').innerHTML = svg('link') + '<span>Kopírovat odkaz</span>';
+$('exportBtn').innerHTML = svg('cal');
+$('clearBtn').innerHTML = svg('trash');
+$('linkBtn').innerHTML = svg('link');
+$('fsBtn').innerHTML = svg('expand');
+$('fsExit').innerHTML = svg('collapse');
+$('helpBtn').innerHTML = svg('info');
+document.querySelector('[data-close-help]').innerHTML = svg('dismiss');
 $('onlyMine').checked = state.onlyMine;
 
 let toastT;
@@ -710,18 +783,18 @@ function renderTabs() {
   $('dayTabs').innerHTML = DAYS.map((d, i) => {
     const mine = ITEMS.filter(it => it.day === d.id && state.mine.has(it.id)).length;
     const m = toks.length ? ITEMS.filter(it => it.day === d.id && matchQ(it, toks)).length : null;
-    return `<button role="tab" aria-selected="${i === state.day}" class="${i === state.day ? 'on' : ''}" data-day="${i}">${d.label} <span class="d">${d.date}</span>${m !== null ? `<span class="pill" title="Výsledky hledání">${m}</span>` : ''}${mine ? `<span class="pill star" title="Položky v mém programu">★ ${mine}</span>` : ''}</button>`;
+    return `<button role="tab" aria-selected="${i === state.day}" class="${i === state.day ? 'on' : ''}" data-day="${i}"><span class="dn">${d.label}</span><span class="ds">${d.label.slice(0, 2)}</span> <span class="d">${d.date}</span>${m !== null ? `<span class="pill" title="Výsledky hledání">${m}</span>` : ''}${mine ? `<span class="pill star" title="Položky v mém programu">★ ${mine}</span>` : ''}</button>`;
   }).join('');
 }
 function renderChips() {
   $('chips').innerHTML = TRACKS.map(tr =>
     `<button class="chip${state.hidden.has(tr.id) ? ' off' : ''}" data-track="${tr.id}" style="--c:var(--c-${tr.id})" aria-pressed="${!state.hidden.has(tr.id)}"><span class="dot"></span>${tr.name}</button>`
-  ).join('') + '<span class="hint">Kliknutím skryješ / zobrazíš sloupec</span>';
+  ).join('');
 }
 function renderSeg() {
-  $('viewSeg').innerHTML = `<button data-view="grid" class="${state.view === 'grid' ? 'on' : ''}" title="Mřížka podle místností">${svg('grid')}Mřížka</button><button data-view="list" class="${state.view === 'list' ? 'on' : ''}" title="Chronologický seznam">${svg('list')}Seznam</button>`;
-  const dis = state.view !== 'grid' ? ' disabled' : '';
-  $('zoomSeg').innerHTML = `<button data-zoom="-1" title="Zmenšit"${dis}>${svg('minus')}</button><button data-zoom="1" title="Zvětšit"${dis}>${svg('plus')}</button>`;
+  $('viewSeg').innerHTML = `<button data-view="grid" class="${state.view === 'grid' ? 'on' : ''}" title="Mřížka podle místností" aria-label="Mřížka">${svg('grid')}<span class="lbl">Mřížka</span></button><button data-view="list" class="${state.view === 'list' ? 'on' : ''}" title="Chronologický seznam" aria-label="Seznam">${svg('list')}<span class="lbl">Seznam</span></button>`;
+  $('zoomSeg').innerHTML = `<button data-zoom="-1" title="Zmenšit časovou osu" aria-label="Zmenšit">${svg('minus')}</button><button data-zoom="1" title="Zvětšit časovou osu" aria-label="Zvětšit">${svg('plus')}</button>`;
+  $('zoomSeg').hidden = state.view !== 'grid';   // měřítko má smysl jen v mřížce
 }
 function updateBadges() {
   $('mineBadge').textContent = state.mine.size || '';
@@ -874,14 +947,16 @@ function renderFly() {
   const conc = ITEMS.filter(o => overlap(o, it)).sort((a, b) => trackIdx(a.track) - trackIdx(b.track) || a.start - b.start);
   const n = s.items.length;
   flyout.innerHTML =
-    `<div class="fly-head" style="--c:${cvar(it)}"><span class="dot"></span><span class="fly-loc">${esc(locName(it))}</span><button class="icon-btn" data-close title="Zavřít (Esc)" aria-label="Zavřít">${svg('dismiss')}</button></div>`
+    `<div class="fly-head" style="--c:${cvar(it)}"><span class="dot"></span><span class="fly-loc">${esc(locName(it))}</span>`
+    + `<button type="button" class="ibtn${st ? ' on' : ''}" data-star-fly title="${st ? 'Odebrat z mého programu' : 'Přidat do mého programu'}" aria-label="${st ? 'Odebrat z mého programu' : 'Přidat do mého programu'}" aria-pressed="${st}">${svg('star')}</button>`
+    + `<button type="button" class="ibtn" data-ics title="Přidat do kalendáře (.ics)" aria-label="Přidat do kalendáře">${svg('cal')}</button>`
+    + `<button type="button" class="ibtn" data-close title="Zavřít (Esc)" aria-label="Zavřít">${svg('dismiss')}</button></div>`
     + `<div class="fly-body" style="--c:${cvar(it)}">`
     + `<div class="eyebrow">${esc(s.kind === 'mini' ? 'Miniseminář' : s.name)}</div><h2>${esc(it.title)}</h2>`
     + `<div class="info">${svg('clock')}<div><b>${day.label} ${day.date}</b> · ${range(it)}</div></div>`
+    + (it.estS || it.estE ? `<div class="est-note">${it.estS && it.estE ? 'Začátek i konec jsou odhad' : it.estS ? 'Začátek je odhad' : 'Konec je odhad'}, skutečnost se může lišit.</div>` : '')
     + `<div class="info">${svg('pin')}<div>${esc(locName(it))}</div></div>`
-    + (it.est ? `<div class="note-box">Čas je dopočítaný: sekce ${fmt(s.start)}–${fmt(s.end)} je rovnoměrně rozdělena mezi ${n} ${pl(n, 'položku', 'položky', 'položek')} (≈ ${Math.round((s.end - s.start) / n)} min). Skutečný začátek se může lišit.</div>` : '')
     + (conf.has(it.id) ? `<div class="warn-box">${svg('warn')}<span>Překrývá se s jinou položkou v tvém programu.</span></div>` : '')
-    + `<div class="actions"><button class="btn${st ? '' : ' primary'}" data-star-fly>${svg('star', st)}${st ? 'Odebrat z mého programu' : 'Přidat do mého programu'}</button><button class="btn" data-ics title="Stáhnout jako událost do kalendáře">${svg('cal')}Do kalendáře</button></div>`
     + (it.sp.length ? `<h4>Přednášející</h4><ul class="speakers">${it.sp.map(p => `<li><b>${esc(p.n)}</b>${p.o ? `<span>${esc(p.o)}</span>` : ''}</li>`).join('')}</ul>` : '')
     + (n > 1 ? `<h4>Program sekce</h4><div class="mlist">${s.items.map(o => miniRow(o, o === it, false)).join('')}</div>` : '')
     + `<h4>Ve stejný čas probíhá ${conc.length ? `<span class="pill">${conc.length}</span>` : ''}</h4>`
@@ -1031,7 +1106,7 @@ $('exportBtn').addEventListener('click', () => {
   const items = ITEMS.filter(i => state.mine.has(i.id)).sort((a, b) => a.day.localeCompare(b.day) * -1 || a.start - b.start);
   if (!items.length) { toast('Nejdřív si ★ označ položky do svého programu.'); return; }
   download('muj-program-gis-2026.ics', buildICS(items));
-  toast(`Staženo ${items.length} ${pl(items.length, 'událost', 'události', 'událostí')} do kalendáře`);
+  toast(`Staženo ${items.length} ${pl(items.length, 'událost', 'události', 'událostí')} (.ics) – otevři soubor a přidají se do kalendáře.`, null, 4500);
 });
 $('linkBtn').addEventListener('click', async () => {
   if (!state.mine.size) { toast('Nejdřív si ★ označ položky do svého programu.'); return; }
@@ -1071,11 +1146,67 @@ document.addEventListener('keydown', e => {
   const typing = /INPUT|TEXTAREA/.test(document.activeElement.tagName);
   if (e.key === '/' && !typing) { e.preventDefault(); $('q').focus(); }
   else if (e.key === 'Escape') {
-    if (state.selected) closeFly();
+    if ($('help').classList.contains('open')) closeHelp();
+    else if (state.selected) closeFly();
+    else if (state.compact) setCompact(false);
     else if (state.q) { state.q = ''; $('q').value = ''; applyFilters(); }
     else if (typing) document.activeElement.blur();
   }
 });
+
+/* ---------- Nápověda ---------- */
+const H = (icon, html) => `<li><span class="k">${icon}</span><span>${html}</span></li>`;
+const dots = `<span class="dots">${['spol', 'jiz', 'ter'].map(t => `<i style="background:var(--c-${t})"></i>`).join('')}</span>`;
+$('helpBody').innerHTML = `
+  <h3>Čtení rozvrhu</h3><ul>
+  ${H(dots, '<b>Sloupce</b> jsou sály, Minisemináře a Stánek konzultačních služeb, barva určuje místo. Kliknutím na štítek sálu nad rozvrhem sloupec skryješ nebo znovu zobrazíš.')}
+  ${H('~', '<b>Vlnovka u času</b> znamená odhad: čas sekce je rovnoměrně rozdělený mezi její přednášky, skutečný začátek či konec se může lišit.')}
+  ${H(svg('clock'), 'Během konference ukazuje <b>červená čára</b> aktuální čas.')}
+  </ul>
+  <h3>Ovládání</h3><ul>
+  ${H(svg('hand'), '<b>Najetí kurzorem</b> na přednášku zvýrazní vše, co běží ve stejný čas, ostatní se ztlumí.')}
+  ${H(svg('grid'), '<b>Kliknutí</b> otevře detail: přednášející, program celé sekce a souběžné přednášky.')}
+  ${H(svg('search'), '<b>Hledání</b> podle názvu, řečníka nebo organizace. Zkratka <kbd>/</kbd>, klávesa <kbd>Esc</kbd> zavře panel nebo vymaže hledání.')}
+  </ul>
+  <h3>Můj program</h3><ul>
+  ${H(svg('star'), '<b>Hvězdička</b> v detailu nebo <b>dvojklik</b> na kartu přidá přednášku do tvého programu. Položky, které se překrývají, se označí červeně.')}
+  ${H('<span class="badge">2</span>', 'Přepínač <b>Můj program</b> zobrazí jen označené položky. Výběr se pamatuje v tomto prohlížeči.')}
+  ${H(svg('link'), '<b>Kopírovat odkaz</b>: adresa obsahuje tvůj výběr. Ulož ji do záložek nebo ji pošli dál.')}
+  ${H(svg('cal'), '<b>Přidat do kalendáře</b>: stáhne soubor .ics pro Outlook, Google nebo Apple kalendář.')}
+  ${H(svg('trash'), '<b>Vymazat</b> celý program (krátce lze vrátit).')}
+  </ul>
+  <h3>Zobrazení</h3><ul>
+  ${H(svg('list'), '<b>Mřížka</b> podle sálů, nebo chronologický <b>Seznam</b> (vhodný pro mobil).')}
+  ${H(svg('plus'), '<b>+ / −</b> mění měřítko časové osy v mřížce.')}
+  ${H(svg('expand'), '<b>Celá obrazovka</b> ponechá jen rozvrh a filtr sálů. Ukončíš ji ikonou vpravo nad rozvrhem nebo klávesou <kbd>Esc</kbd>.')}
+  ${H(svg('auto'), '<b>Motiv</b> se kliknutím přepíná: podle systému → světlý → tmavý.')}
+  </ul>
+  <p class="src">Zdroj programu: <a href="https://www.arcdata.cz/cs-cz/akce/2026/konference/prednasky" target="_blank" rel="noopener">arcdata.cz</a>. Případné změny ověř na webu pořadatele.</p>`;
+function openHelp() {
+  $('help').classList.add('open'); $('helpScrim').classList.add('show');
+  $('help').querySelector('.modal-body').scrollTop = 0;
+  $('help').querySelector('[data-close-help]').focus({ preventScroll:true });
+}
+function closeHelp() { $('help').classList.remove('open'); $('helpScrim').classList.remove('show'); $('helpBtn').focus({ preventScroll:true }); }
+$('helpBtn').addEventListener('click', openHelp);
+$('helpScrim').addEventListener('click', closeHelp);
+$('help').addEventListener('click', e => { if (e.target.closest('[data-close-help]')) closeHelp(); });
+
+/* ---------- Celá obrazovka: jen rozvrh + filtr sálů ----------
+   Rozvržení stránky se přepne vždy; skutečný režim celé obrazovky prohlížeče (skryje i adresní řádek) se použije,
+   kde to prohlížeč dovolí. Ukončení přes Esc / systémové gesto vrátí i rozvržení. */
+function setCompact(on) {
+  state.compact = on;
+  document.body.classList.toggle('compact', on);
+  const de = document.documentElement;
+  try {
+    if (on && !document.fullscreenElement && de.requestFullscreen) de.requestFullscreen({ navigationUI:'hide' }).catch(() => {});
+    if (!on && document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(() => {});
+  } catch (e) {}
+}
+document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement && state.compact) setCompact(false); });
+$('fsBtn').addEventListener('click', () => setCompact(true));
+$('fsExit').addEventListener('click', () => setCompact(false));
 
 applyTheme();
 renderStatus();
